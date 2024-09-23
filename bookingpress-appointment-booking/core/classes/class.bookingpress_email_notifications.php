@@ -377,8 +377,8 @@ if (! class_exists('bookingpress_email_notifications') ) {
             if (! empty($this->bookingpress_email_notification_type) && ! empty($this->bookingpress_email_sender_name) && ! empty($this->bookingpress_email_sender_email) && ! empty($template_type) && ! empty($notification_name) && ! empty($receiver_email_id) ) {
                 $bookingpress_appointment_data = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$tbl_bookingpress_appointment_bookings} WHERE bookingpress_appointment_booking_id =%d", $appointment_id), ARRAY_A);// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Reason: $tbl_bookingpress_appointment_bookings is table name defined globally. False Positive alarm
 
-                 $this->bookingpress_template_type = $template_type;
-                    $bookingpress_appointment_data = apply_filters("bookingpress_modify_client_date_time_email_notification", $bookingpress_appointment_data, $this->bookingpress_template_type );
+                $this->bookingpress_template_type = $template_type;
+                $bookingpress_appointment_data = apply_filters("bookingpress_modify_client_date_time_email_notification", $bookingpress_appointment_data, $this->bookingpress_template_type );
                 do_action('bookingpress_other_debug_log_entry', 'email_notification_debug_logs', 'Send Email notification appointment data', 'bookingpress_email_notiifcation', $bookingpress_appointment_data, $bookingpress_other_debug_log_id);
 
                 $notification_type =  !empty($bookingpress_notification_data['bookingpress_notification_type']) ? $bookingpress_notification_data['bookingpress_notification_type'] : 'default';

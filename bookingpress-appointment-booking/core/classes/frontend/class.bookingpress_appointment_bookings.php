@@ -140,7 +140,9 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                 add_action('bookingpress_paypal_payment_button_html',array($this,'bookingpress_paypal_payment_button_html_func'),10);                  
             }            
 
-            add_action( 'wp_enqueue_scripts',  array($this, 'bookingpress_paypal_scripts_add') ); 
+            
+            add_action('bookingpress_add_frontend_js', array($this, 'bookingpress_paypal_scripts_add'));
+
             /* For Validate Paypal Request & add entries */
 			add_action('wp_ajax_bookingpress_paypal_booking_validate_lite', array($this, 'bookingpress_paypal_booking_validate_lite_func'), 10);
 			add_action('wp_ajax_nopriv_bookingpress_paypal_booking_validate_lite', array($this, 'bookingpress_paypal_booking_validate_lite_func'), 10);	            
