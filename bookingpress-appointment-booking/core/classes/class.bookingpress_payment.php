@@ -810,6 +810,8 @@ if (! class_exists('bookingpress_payment') ) {
                         'customer_email'          => $payment_log_val['bookingpress_customer_email'],
                         'customer_avatar'         => $bookingpress_avatar_url,
                         'change_status_loader'    => 0,
+                        'sort_payment_appointment_date' => $payment_log_val['bookingpress_appointment_date'],
+                        'sort_payment_date'       => $payment_log_val['bookingpress_payment_date_time'],
                     );
                     $payment             = apply_filters('bookingpress_payment_add_view_field', $payment, $payment_log_val);
                     $payment_logs_data[] = $payment;

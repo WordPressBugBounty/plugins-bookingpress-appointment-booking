@@ -1677,15 +1677,30 @@ if( version_compare( $bookingpress_old_version, '1.1.6', '<' ) ){
 if( version_compare( $bookingpress_old_version, '1.1.11', '<' ) ){
     global $wpdb;
 
-    $fetch_records = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value LIKE '%\"widgetType\":\"Booking Forms - WordPress Booking Plugin\"%' OR meta_value LIKE '%\"widgetType\":\"Customer Panel - BookingPress Appointment Plugin\"%'", '_elementor_data' ) );
+    $fetch_records = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value LIKE '%\"widgetType\":\"Booking Forms - WordPress Booking Plugin\"%' OR meta_value LIKE '%\"widgetType\":\"Customer Panel - BookingPress Appointment Plugin\"%'", '_elementor_data' ) ); //phpcs:ignore
 
     if( $fetch_records > 0 ){
         update_option( 'bookingpress_update_elementor_widget', '1' );
     }
 }
 
+if( version_compare( $bookingpress_old_version, '1.1.15', '<') ){
+    global $wpdb, $tbl_bookingpress_appointment_bookings, $tbl_bookingpress_entries;
+
+    $wpdb->query( "ALTER TABLE {$tbl_bookingpress_appointment_bookings} ADD bookingpress_selected_appointment_date DATE AFTER bookingpress_appointment_timezone" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Reason: $tbl_bookingpress_appointment_bookings is table name defined globally. False Positive alarm
+    $wpdb->query( "ALTER TABLE {$tbl_bookingpress_appointment_bookings} ADD bookingpress_selected_appointment_end_date DATE AFTER bookingpress_selected_appointment_date" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Reason: $tbl_bookingpress_appointment_bookings is table name defined globally. False Positive alarm
+    $wpdb->query( "ALTER TABLE {$tbl_bookingpress_appointment_bookings} ADD bookingpress_selected_appointment_time TIME AFTER bookingpress_selected_appointment_end_date" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Reason: $tbl_bookingpress_appointment_bookings is table name defined globally. False Positive alarm
+    $wpdb->query( "ALTER TABLE {$tbl_bookingpress_appointment_bookings} ADD bookingpress_selected_appointment_end_time TIME AFTER bookingpress_selected_appointment_time" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Reason: $tbl_bookingpress_appointment_bookings is table name defined globally. False Positive alarm
+
+
+    $wpdb->query( "ALTER TABLE {$tbl_bookingpress_entries} ADD bookingpress_selected_appointment_date DATE AFTER bookingpress_due_amount" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Reason: $tbl_bookingpress_entries is table name defined globally. False Positive alarm
+    $wpdb->query( "ALTER TABLE {$tbl_bookingpress_entries} ADD bookingpress_selected_appointment_end_date DATE AFTER bookingpress_selected_appointment_date" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Reason: $tbl_bookingpress_entries is table name defined globally. False Positive alarm
+    $wpdb->query( "ALTER TABLE {$tbl_bookingpress_entries} ADD bookingpress_selected_appointment_time TIME AFTER bookingpress_selected_appointment_end_date" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Reason: $tbl_bookingpress_entries is table name defined globally. False Positive alarm
+    $wpdb->query( "ALTER TABLE {$tbl_bookingpress_entries} ADD bookingpress_selected_appointment_end_time TIME AFTER bookingpress_selected_appointment_time" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Reason: $tbl_bookingpress_entries is table name defined globally. False Positive alarm
+}
+
 $BookingPress->bookingpress_cleanup_transient_data_hook_callback();
-$bookingpress_new_version = '1.1.14';
+$bookingpress_new_version = '1.1.15';
 update_option('bookingpress_new_version_installed', 1);
 update_option('bookingpress_version', $bookingpress_new_version);
 update_option('bookingpress_updated_date_' . $bookingpress_new_version, current_time('mysql'));

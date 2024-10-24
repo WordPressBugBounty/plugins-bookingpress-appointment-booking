@@ -162,7 +162,7 @@
 								</template>
 							</el-table-column>
 							<el-table-column type="selection"></el-table-column>
-							<el-table-column prop="payment_date" min-width="70" label="<?php esc_html_e( 'Date', 'bookingpress-appointment-booking' ); ?>" sortable></el-table-column>
+							<el-table-column prop="payment_date" min-width="70" label="<?php esc_html_e( 'Date', 'bookingpress-appointment-booking' ); ?>" sortable sort-by="sort_payment_date"></el-table-column>
 							<el-table-column prop="payment_customer" min-width="120" label="<?php esc_html_e( 'Customer', 'bookingpress-appointment-booking' ); ?>" sortable></el-table-column>
 							<el-table-column prop="payment_service" min-width="120" label="<?php esc_html_e( 'Service', 'bookingpress-appointment-booking' ); ?>" sortable></el-table-column>
 							<el-table-column prop="payment_gateway" min-width="60" label="<?php esc_html_e( 'Method', 'bookingpress-appointment-booking' ); ?>">
@@ -200,7 +200,7 @@
 									</div>
 								</template>
 							</el-table-column>
-							<el-table-column prop="appointment_date" label="<?php esc_html_e( 'Appointment On', 'bookingpress-appointment-booking' ); ?>" sortable sort-by="appointment_date">
+							<el-table-column prop="appointment_date" label="<?php esc_html_e( 'Appointment On', 'bookingpress-appointment-booking' ); ?>" sortable sort-by="sort_payment_appointment_date">
 								<template slot-scope="scope">
 									<label>{{ scope.row.appointment_date }}</label>
 									<div class="bpa-table-actions-wrap">
@@ -323,7 +323,7 @@
 								</template>
 							</el-table-column>
 							<el-table-column type="selection"></el-table-column>
-							<el-table-column prop="payment_date" min-width="70" label="<?php esc_html_e( 'Date', 'bookingpress-appointment-booking' ); ?>" sortable></el-table-column>							
+							<el-table-column prop="payment_date" min-width="70" label="<?php esc_html_e( 'Date', 'bookingpress-appointment-booking' ); ?>" sortable sort-by="sort_payment_date"></el-table-column>							
 							<el-table-column prop="payment_service" min-width="100" label="<?php esc_html_e( 'Service', 'bookingpress-appointment-booking' ); ?>" sortable></el-table-column>							
 							<el-table-column prop="payment_status" min-width="90" label="<?php esc_html_e( 'Status', 'bookingpress-appointment-booking' ); ?>">
 								<template slot-scope="scope">

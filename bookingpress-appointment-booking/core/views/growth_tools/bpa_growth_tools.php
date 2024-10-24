@@ -134,7 +134,7 @@
                                 <span class="bpa-plugin-icon bpa-arf-icon"></span>
                             </div>
                             <div class="bpa-gt-plugin-dec">
-                                <div class="bpa-plugin-heading arf-heading"> ARForms <span class="bpa-plugin-heading-cls">- WordPress Membership Plugin </span> </div>
+                                <div class="bpa-plugin-heading arf-heading"> ARForms <span class="bpa-plugin-heading-cls">- WordPress Form Builder Plugin </span> </div>
                                 <div class="bpa-plugin-heading-desc"> ARForms is an all-in-one WordPress form builder plugin. It not only allows you to create contact forms for your site but also empowers you to build WordPress forms such as feedback forms, survey forms, and various other types of forms with responsive designs. </div>
                                 <div class="bpa-plugin-key-feature"> Key Features: </div>
                                 <ul class="bpa-feature-list-cls-plugin-dec">
@@ -176,7 +176,7 @@
                                 <span class="bpa-plugin-icon bpa-arp-icon"></span>
                             </div>
                             <div class="bpa-gt-plugin-dec">
-                                <div class="bpa-plugin-heading arp-heading"> ARPrice <span class="bpa-plugin-heading-cls">- WordPress Membership Plugin </span> </div>
+                                <div class="bpa-plugin-heading arp-heading"> ARPrice <span class="bpa-plugin-heading-cls">- WordPress Pricing Table Plugin </span> </div>
                                 <div class="bpa-plugin-heading-desc">ARPrice is a WordPress pricing table plugin that enables you to effortlessly craft responsive pricing tables and plan comparison tables. With its powerful and flexible real-time editor, you can swiftly design pricing tables, using multiple templates, to suit various WordPress themes. </div>
                                 <div class="bpa-plugin-key-feature"> Key Features: </div>
                                 <ul class="bpa-feature-list-cls-plugin-dec">

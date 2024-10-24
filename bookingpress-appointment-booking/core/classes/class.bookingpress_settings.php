@@ -1498,7 +1498,7 @@ if (! class_exists('bookingpress_settings') ) {
             $bookingpress_fileupload_obj->check_specific_ext = false;
             $bookingpress_fileupload_obj->allowed_ext        = array();
 
-            $file_name                = isset($_FILES['file']['name']) ? current_time('timestamp') . '_' . sanitize_file_name($_FILES['file']['name']) : '';
+            $file_name                = isset($_FILES['file']['name']) ? current_time('timestamp') . '_' . sanitize_file_name($_FILES['file']['name']) : ''; //phpcs:ignore
             $upload_dir               = BOOKINGPRESS_TMP_IMAGES_DIR . '/';
             $upload_url               = BOOKINGPRESS_TMP_IMAGES_URL . '/';
             $bookingpress_destination = $upload_dir . $file_name;

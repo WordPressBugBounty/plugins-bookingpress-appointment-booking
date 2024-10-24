@@ -169,6 +169,55 @@ if (! class_exists('BookingPress') ) {
 
             add_filter( 'debug_information', array( $this, 'bpa_check_server_short_tag_information') );
 
+            add_filter( 'bookingpress_modify_update_transient_flag', array( $this, 'bookingpress_modify_update_transient_flag_func') );
+
+        }
+
+        function bookingpress_modify_update_transient_flag_func( $transient_flag ){
+
+            /** Check if the pro plugin is active */
+            if( $this->bpa_is_pro_active() ){
+                if( !function_exists('is_plugin_active') ){
+                    include ABSPATH . '/wp-admin/includes/plugin.php';
+                }
+
+                if( is_plugin_active( 'bookingpress-cart/bookingpress-cart.php' ) ){
+                    global $bookingpress_cart_version;
+                    if( version_compare( $bookingpress_cart_version, '3.2', '<' ) ){
+                        $transient_flag = true;
+                    }
+                }
+
+                if( is_plugin_active( 'bookingpress-custom-service-duration/bookingpress-custom-service-duration.php' ) ){
+                    global $bookingpress_custom_service_duration_version;
+                    if( version_compare( $bookingpress_custom_service_duration_version, '3.2', '<' ) ){
+                        $transient_flag = true;
+                    }
+                }
+
+                if( is_plugin_active( 'bookingpress-recurring-appointments/bookingpress-recurring-appointments.php' ) ){
+                    global $recurring_appointments_list_version;
+                    if( version_compare( $recurring_appointments_list_version, '1.7', '<' ) ){
+                        $transient_flag = true;
+                    }
+                }
+
+                if( is_plugin_active( 'bookingpress-location/bookingpress-location.php' ) ){
+                    global $bookingpress_location_version;
+                    if( version_compare( $bookingpress_location_version, '1.6', '<' ) ){
+                        $transient_flag = true;
+                    } else if( version_compare( $this->bpa_pro_plugin_version(), '3.9.8', '<') ){
+                        $transient_flag = true;
+                    }
+                }
+
+                if( false == $transient_flag && !empty( $_REQUEST['is_rescheduling_event'] ) && 'true' == $_REQUEST['is_rescheduling_event'] ){
+                    $transient_flag = true;
+                }
+            }
+
+
+            return $transient_flag;
         }
 
         function bpa_check_server_short_tag_information( $server_info ){
@@ -1958,7 +2007,7 @@ if (! class_exists('BookingPress') ) {
         {
             global $bookingpress_version;
             $bookingpress_old_version = get_option('bookingpress_version', true);
-            if (version_compare($bookingpress_old_version, '1.1.14', '<') ) {
+            if (version_compare($bookingpress_old_version, '1.1.15', '<') ) {
                 $bookingpress_load_upgrade_file = BOOKINGPRESS_VIEWS_DIR . '/upgrade_latest_data.php';
                 include $bookingpress_load_upgrade_file;
                 $this->bookingpress_send_anonymous_data_cron();
@@ -2080,6 +2129,7 @@ if (! class_exists('BookingPress') ) {
                             bookingpress_return_data["jsCurrentDate"] = new Date(<?php echo !empty( $bookingpress_site_date ) ? '"' . esc_html( $bookingpress_site_date ) . '"' : ''; ?>);
                             bookingpress_return_data["jsCurrentDateFormatted"] = new Date (<?php echo !empty( $bookingpress_site_current_date ) ? '"' . esc_html($bookingpress_site_current_date) . '"' : '' ?>);
                             bookingpress_return_data['is_display_drawer_loader'] = '0';
+                            bookingpress_return_data["jsCurrentOnlyDate"] = bookingpress_return_data['jsCurrentDateFormatted'].toISOString().split("T")[0];
                             bookingpress_return_data['requested_module'] = bookingpress_requested_module;
                             bookingpress_return_data['read_more_link'] = '#';
                             bookingpress_return_data['site_locale'] = '<?php echo esc_html($bookingpress_site_current_language); ?>';
@@ -3949,6 +3999,10 @@ if (! class_exists('BookingPress') ) {
                     `bookingpress_paid_amount` float DEFAULT 0,
                     `bookingpress_due_amount` float DEFAULT 0,
                     `bookingpress_appointment_timezone` varchar(50) DEFAULT NULL,
+                    `bookingpress_selected_appointment_date` DATE NOT NULL,
+                    `bookingpress_selected_appointment_end_date` DATE NOT NULL,
+                    `bookingpress_selected_appointment_time` TIME NOT NULL,
+                    `bookingpress_selected_appointment_end_time` TIME NOT NULL,
                     `bookingpress_appointment_token` varchar(50) DEFAULT NULL,
 					`bookingpress_created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
 					PRIMARY KEY (`bookingpress_appointment_booking_id`)
@@ -4021,6 +4075,10 @@ if (! class_exists('BookingPress') ) {
 					`bookingpress_appointment_status` varchar(20) NOT NULL,	
                     `bookingpress_paid_amount` float DEFAULT 0,
                     `bookingpress_due_amount` float DEFAULT 0,
+                    `bookingpress_selected_appointment_date` DATE NOT NULL,
+                    `bookingpress_selected_appointment_end_date` DATE NOT NULL,
+                    `bookingpress_selected_appointment_time` TIME NOT NULL,
+                    `bookingpress_selected_appointment_end_time` TIME NOT NULL,
 					`bookingpress_created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
 					PRIMARY KEY (`bookingpress_entry_id`)
 				) {$charset_collate}";
@@ -6000,6 +6058,217 @@ if (! class_exists('BookingPress') ) {
 
         }
 
+        function bookingpress_check_for_the_holidays( $selected_date = '', $selected_service_id = '', $type = 'company' ){
+            global $tbl_bookingpress_default_daysoff, $wpdb;
+
+            $is_holiday = false;
+
+            if( empty( $selected_date ) ){
+                return $is_holiday;
+            }
+
+            if( 'company' == $type || empty( $type ) ){
+                /** Check if selected days is in holiday */
+                $bpa_default_daysoff_where = $wpdb->prepare( 'WHERE (bookingpress_dayoff_date >= %s OR bookingpress_repeat = %d)', $selected_date .' 00:00:00',1);
+                $daysoff_details = $wpdb->get_results("SELECT bookingpress_dayoff_date,bookingpress_repeat FROM {$tbl_bookingpress_default_daysoff} {$bpa_default_daysoff_where}");// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Reason: $tbl_bookingpress_default_daysoff is table name defined globally. False alarm
+    
+                $is_holiday = false;
+                if( !empty( $daysoff_details ) ){
+                    foreach( $daysoff_details as $daysoff_data ){
+                        if( $daysoff_data->bookingpress_dayoff_date == $selected_date .' 00:00:00' ){
+                            $service_timings_data['is_daysoff'] = true;
+                            $is_holiday = true;
+                        } else if( $daysoff_data->bookingpress_repeat == 1 ){
+                            $current_date_without_year = date('m-d', strtotime( $selected_date ) );
+                            $holiday_date_without_year = date('m-d', strtotime( $daysoff_data->bookingpress_dayoff_date ) );
+                            if( $holiday_date_without_year == $current_date_without_year ){
+                                $service_timings_data['is_daysoff'] = true;
+                                $is_holiday = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            $is_holiday = apply_filters( 'bookingpress_check_advance_repeated_default_holidays_'. $type, $is_holiday, $selected_date, $selected_service_id );
+
+            return $is_holiday;
+
+        }
+
+        function bookinpgress_retrieve_default_workhours( $selected_service_id, $selected_date, $minimum_time_required, $service_max_capacity, $bookingpress_show_time_as_per_service_duration ){
+
+            $service_timings = array();
+
+            global $wpdb, $tbl_bookingpress_default_workhours, $tbl_bookingpress_appointment_bookings, $tbl_bookingpress_services, $tbl_bookingpress_default_daysoff;
+
+            $current_day  = ! empty( $selected_date ) ? strtolower( date( 'l', strtotime( $selected_date ) ) ) : strtolower( date( 'l', current_time( 'timestamp' ) ) );
+            $current_date = ! empty($selected_date) ? date('Y-m-d', strtotime($selected_date)) : date('Y-m-d', current_time('timestamp'));
+
+            $bpa_current_date = date('Y-m-d', current_time('timestamp'));
+            $bpa_current_time = date( 'H:i', current_time('timestamp') );
+
+            $service_time_duration     = $this->bookingpress_get_default_timeslot_data();
+            $default_timeslot_step = $service_step_duration_val = $service_time_duration['default_timeslot'];
+
+            $bookingpress_current_time_timestamp = current_time('timestamp');
+            $service_time_duration_unit = $service_time_duration['time_unit'];            
+            
+            if (! empty($selected_service_id) ) {
+                $service_data = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$tbl_bookingpress_services} WHERE bookingpress_service_id = %d", $selected_service_id), ARRAY_A); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared --Reason $tbl_bookingpress_services is a table name
+                if (! empty($service_data) ) {
+                    $service_time_duration      = esc_html($service_data['bookingpress_service_duration_val']);
+                    $service_time_duration_unit = esc_html($service_data['bookingpress_service_duration_unit']);
+                    if ($service_time_duration_unit == 'h' ) {
+                        $service_time_duration = $service_time_duration * 60;
+                    } elseif($service_time_duration_unit == 'd') {           
+                        $service_time_duration = $service_time_duration * 24 * 60;
+                    }
+                    $default_timeslot_step = $service_step_duration_val = $service_time_duration;
+                }
+            }
+
+            $bpa_fetch_updated_slots = false;
+            if( isset( $_POST['bpa_fetch_data'] ) && 'true' == sanitize_text_field($_POST['bpa_fetch_data'] )){  // phpcs:ignore
+                $bpa_fetch_updated_slots = true;
+            }
+
+            $service_step_duration_val = apply_filters( 'bookingpress_modify_service_timeslot', $service_step_duration_val, $selected_service_id, $service_time_duration_unit, $bpa_fetch_updated_slots );
+
+            $bookingpress_show_time_as_per_service_duration = $this->bookingpress_get_settings( 'show_time_as_per_service_duration', 'general_setting' );
+            if ( ! empty( $bookingpress_show_time_as_per_service_duration ) && $bookingpress_show_time_as_per_service_duration == 'false' ) {
+                $bookingpress_default_time_slot = $this->bookingpress_get_settings( 'default_time_slot', 'general_setting' );
+                $default_timeslot_step      = $bookingpress_default_time_slot;
+            } else {
+                $default_timeslot_step = $service_step_duration_val;
+            }
+
+            $get_default_work_hours_data = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$tbl_bookingpress_default_workhours} WHERE bookingpress_workday_key = %s AND bookingpress_is_break = 0 AND bookingpress_start_time IS NOT NULL", $current_day), ARRAY_A); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Reason: $tbl_bookingpress_default_workhours is table name defined globally. False Positive alarm
+
+            $workhour_data = array();
+            $workhours_break_data = array();
+
+            $is_holiday = $this->bookingpress_check_for_the_holidays( $selected_date, $selected_service_id );
+
+            if( true == $is_holiday ){
+                return $service_timings;
+            }
+
+            $get_default_work_hous_break_data = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$tbl_bookingpress_default_workhours} WHERE bookingpress_workday_key = %s AND bookingpress_is_break = 1 AND bookingpress_start_time IS NOT NULL", $current_day), ARRAY_A); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Reason: $tbl_bookingpress_default_workhours is table name defined globally. False Positive alarm
+
+            if( !empty( $get_default_work_hous_break_data )  ){
+                foreach( $get_default_work_hous_break_data as $default_workhour_data ){
+                    $break_data = array(
+                        'break_start_time' => date( 'H:i', strtotime( $default_workhour_data['bookingpress_start_time'] ) ),
+                        'break_end_time' => date('H:i', strtotime( $default_workhour_data['bookingpress_end_time'] ) )
+                    );
+
+                    $workhours_break_data[]  = $break_data;
+                }
+            }
+
+            
+
+            if( !empty( $get_default_work_hours_data ) ){
+                $service_current_time = $service_start_time = apply_filters( 'bookingpress_modify_service_start_time', date('H:i', strtotime($get_default_work_hours_data['bookingpress_start_time'])), $selected_service_id );
+                $service_end_time     = apply_filters( 'bookingpress_modify_service_end_time', date('H:i', strtotime($get_default_work_hours_data['bookingpress_end_time'])), $selected_service_id );
+
+                if($service_end_time == "00:00"){
+                    $service_end_time = "24:00";
+                }
+
+                if ($service_start_time != null && $service_end_time != null ) {  
+                    $interval = new DateInterval( 'PT'. $default_timeslot_step .'M' );
+                    $startDateTime = new DateTime( $selected_date .' '.$service_start_time, new DateTimeZone( wp_timezone_string() ) );
+                    $endDateTime = new DateTime( $selected_date .' '.$service_end_time, new DateTimeZone( wp_timezone_string() ) );
+
+                    
+                    while( $startDateTime <= $endDateTime ){
+    
+                        $slotStart = $startDateTime;
+                        $slotEnd = clone $slotStart;
+                        $slotEnd->add( new DateInterval( 'PT'.$service_step_duration_val . 'M' ) );
+                    
+                        $service_tmp_current_time = $service_current_time = $slotStart->format('H:i');
+                    
+                        if ($service_current_time == '00:00' ) {
+                            $service_current_time = date('H:i', strtotime($service_current_time) + ( $service_step_duration_val * 60 ));
+                        } else {
+                            $service_tmp_time_obj = new DateTime($selected_date.' '.$service_current_time);
+                            $service_tmp_time_obj->add(new DateInterval('PT' . $service_step_duration_val . 'M'));
+                            
+                            $service_current_time = $service_tmp_time_obj->format('H:i');
+                            $service_current_date = $service_tmp_time_obj->format('Y-m-d');
+                            if( $service_current_date > $selected_date ){
+                                if( $service_end_time == '24:00' && strtotime($service_current_date.' '.$service_current_time) > strtotime( $service_current_date . ' 00:00' ) ){
+                                    break;
+                                }
+                            }
+                        }
+                    
+                        if ($service_current_time < $service_start_time || $service_current_time == $service_start_time ) {
+                            $service_current_time = $service_end_time;
+                        }
+                    
+                        $bookingpress_timediff_in_minutes = round(abs(strtotime($service_current_time) - strtotime($service_tmp_current_time)) / 60, 2);
+                        $is_booked_for_minimum = false;
+                    
+                        if( 'disabled' != $minimum_time_required ){
+                            $bookingpress_slot_start_datetime       = $selected_date . ' ' . $service_tmp_current_time . ':00';
+                            $bookingpress_slot_start_time_timestamp = strtotime( $bookingpress_slot_start_datetime );
+                            $bookingpress_time_diff = round( abs( current_time('timestamp') - $bookingpress_slot_start_time_timestamp ) / 60, 2 );
+                            
+                            if( $bookingpress_time_diff <= $minimum_time_required ){
+                                $is_booked_for_minimum = true;
+                            }
+                        }
+                    
+                        
+                        if( ($bookingpress_timediff_in_minutes >= $service_step_duration_val) && $service_current_time <= $service_end_time && $slotEnd <= $endDateTime ){
+                            if( strtotime( $selected_date .' ' . $service_tmp_current_time ) > current_time( 'timestamp' ) && !$is_booked_for_minimum ){
+                                $is_break = false;
+                                if( !empty( $workhours_break_data ) ){
+                                    foreach( $workhours_break_data as $break_hour_data ){
+                                        $break_start_time = new DateTime( $selected_date .' '. $break_hour_data['break_start_time'], new DateTimeZone( wp_timezone_string() ) );
+                                        $break_end_time = new DateTime( $selected_date .' '. $break_hour_data['break_end_time'], new DateTimeZone( wp_timezone_string() ) );
+                    
+                                        if( $slotStart < $break_end_time && $slotEnd > $break_start_time ){
+                                            $is_break = true;
+                                        }
+                                    }
+                                }
+                    
+                                if( true == $is_break ){
+                                    $startDateTime->add( $interval );
+                                    continue;
+                                }
+                    
+                                $service_timing_arr = array(
+                                    'start_time' => $service_tmp_current_time,
+                                    'end_time'   => $service_current_time,
+                                    'store_start_time' => $service_tmp_current_time,
+                                    'store_end_time'   => $service_current_time,
+                                    'break_start_time' => !empty( $break_start_time ) ? $break_start_time->format('H:i:s') : '',
+                                    'break_end_time' => !empty( $break_end_time ) ? $break_end_time->format('H:i:s') : '',
+                                    'store_service_date' => $selected_date,
+                                    'is_booked'  => 0,
+                                    'max_capacity' => $service_max_capacity,
+                                    'total_booked' => 0
+                                );
+                                $workhour_data[] = $service_timing_arr;
+                            }
+                        }
+                    
+                        $startDateTime->add( $interval );
+                    }
+                    $service_timings = $workhour_data;
+                }
+            }
+
+            return $service_timings;
+
+        }
+
         /**
          * Core function to get default workhours
          *
@@ -6010,7 +6279,7 @@ if (! class_exists('BookingPress') ) {
          * @param  mixed $bookingpress_show_time_as_per_service_duration
          * @return void
          */
-        public function bookinpgress_retrieve_default_workhours( $selected_service_id, $selected_date, $minimum_time_required, $service_max_capacity, $bookingpress_show_time_as_per_service_duration ){
+        public function bookinpgress_retrieve_default_workhours_legacy( $selected_service_id, $selected_date, $minimum_time_required, $service_max_capacity, $bookingpress_show_time_as_per_service_duration ){
             // phpcs:ignore WordPress.Security.NonceVerification
             $service_timings = array();
 
@@ -6053,6 +6322,7 @@ if (! class_exists('BookingPress') ) {
             $bpa_current_time = date('H:i', current_time('timestamp'));
             $service_time_duration     = $this->bookingpress_get_default_timeslot_data();
             $default_timeslot_step = $service_step_duration_val = $service_time_duration['default_timeslot'];
+            
 
             $bookingpress_current_time_timestamp = current_time('timestamp');
             $service_time_duration_unit = $service_time_duration['time_unit'];
@@ -6071,6 +6341,7 @@ if (! class_exists('BookingPress') ) {
 					$default_timeslot_step = $service_step_duration_val = $service_time_duration;
 				}
 			}
+            
 
             $bpa_fetch_updated_slots = false;
             if( isset( $_POST['bpa_fetch_data'] ) && 'true' == sanitize_text_field($_POST['bpa_fetch_data'] )){  // phpcs:ignore
@@ -6078,7 +6349,6 @@ if (! class_exists('BookingPress') ) {
             }
 
             $service_step_duration_val = apply_filters( 'bookingpress_modify_service_timeslot', $service_step_duration_val, $selected_service_id, $service_time_duration_unit, $bpa_fetch_updated_slots );
-            
             
 			$bookingpress_show_time_as_per_service_duration = $this->bookingpress_get_settings( 'show_time_as_per_service_duration', 'general_setting' );
             if ( ! empty( $bookingpress_show_time_as_per_service_duration ) && $bookingpress_show_time_as_per_service_duration == 'false' ) {
@@ -8483,7 +8753,7 @@ if (! class_exists('BookingPress') ) {
 
             $time_before_hour = current_time( 'timestamp' ) - DAY_IN_SECONDS;
 
-            $wpdb->query( $wpdb->prepare( "DELETE FROM {$tbl_bookingpress_transient} WHERE bookingpress_transient_expiry <= %s", $time_before_hour ) );
+            $wpdb->query( $wpdb->prepare( "DELETE FROM {$tbl_bookingpress_transient} WHERE bookingpress_transient_expiry <= %s", $time_before_hour ) ); //phpcs:ignore
 
         }
         

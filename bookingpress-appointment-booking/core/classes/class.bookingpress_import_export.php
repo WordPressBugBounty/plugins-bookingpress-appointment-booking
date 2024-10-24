@@ -1521,8 +1521,8 @@ if (! class_exists('bookingpress_import_export') ) {
             }
 
             $bookingpress_import_data = array();
-            if(!empty($_POST['bookingpress_import_data']) && isset($_POST['bookingpress_import_data'])){
-                if(!empty($_POST['bookingpress_import_data'])){
+            if(!empty($_POST['bookingpress_import_data']) && isset($_POST['bookingpress_import_data'])){ //phpcs:ignore
+                if(!empty($_POST['bookingpress_import_data'])){ //phpcs:ignore
                     //$_POST['bookingpress_import_data'] = gzuncompress($_POST['bookingpress_import_data']);
                 }
                 $bookingpress_import_data = stripslashes($_POST['bookingpress_import_data']); // phpcs:ignore

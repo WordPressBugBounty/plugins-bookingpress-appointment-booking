@@ -45,7 +45,7 @@ if (! class_exists('bookingpress_calendar') ) {
                 return;
             }
 
-            $payment_id = $wpdb->get_var( $wpdb->prepare( "SELECT bookingpress_payment_id FROM {$tbl_bookingpress_appointment_bookings} WHERE bookingpress_appointment_booking_id = %d", $bookingpress_update_id ) );
+            $payment_id = $wpdb->get_var( $wpdb->prepare( "SELECT bookingpress_payment_id FROM {$tbl_bookingpress_appointment_bookings} WHERE bookingpress_appointment_booking_id = %d", $bookingpress_update_id ) ); //phpcs:ignore
 
             if( empty( $payment_id ) ){
                 return;

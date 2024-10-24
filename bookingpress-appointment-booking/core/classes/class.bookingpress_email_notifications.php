@@ -694,7 +694,7 @@ if (! class_exists('bookingpress_email_notifications') ) {
         function bookingpress_get_host_name(){
             $result = '';
             if (isset($_SERVER) && array_key_exists('SERVER_NAME', $_SERVER)) {
-                $result = !empty( $_SERVER['SERVER_NAME'] ) ? $_SERVER['SERVER_NAME'] : '';
+                $result = !empty( $_SERVER['SERVER_NAME'] ) ? sanitize_text_field( $_SERVER['SERVER_NAME'] ) : '';
             } elseif (function_exists('gethostname') && gethostname() !== false) {
                 $result = gethostname();
             } elseif (php_uname('n') !== false) {

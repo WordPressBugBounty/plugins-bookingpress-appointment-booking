@@ -188,6 +188,11 @@ if (! class_exists('bookingpress_payment_gateways') ) {
                 $customer_phone_dial_code = !empty($bookingpress_appointment_data['customer_phone_dial_code']) ? $bookingpress_appointment_data['customer_phone_dial_code'] : '';
                 $bookingpress_terms_conditions = !empty( $bookingpress_appointment_data['appointment_terms_conditions']) ? sanitize_text_field($bookingpress_appointment_data['appointment_terms_conditions']) : '';
 
+                $customer_selected_appointment_date = !empty( $bookingpress_appointment_data['customer_selected_date'] ) ? sanitize_text_field( $bookingpress_appointment_data['customer_selected_date'] ) : '';
+                $customer_selected_appointment_end_date = !empty( $bookingpress_appointment_data['customer_selected_end_date'] ) ? sanitize_text_field( $bookingpress_appointment_data['customer_selected_end_date'] ) : '';
+                $customer_selected_appointment_time = !empty( $bookingpress_appointment_data['customer_selected_time'] ) ? sanitize_text_field( $bookingpress_appointment_data['customer_selected_time'] ) : '';
+                $customer_selected_appointment_end_time = !empty( $bookingpress_appointment_data['customer_selected_end_time'] ) ? sanitize_text_field( $bookingpress_appointment_data['customer_selected_end_time'] ) : '';
+
                 if( !empty($customer_phone) && !empty( $customer_phone_dial_code) ){
 
                     $customer_phone_pattern = '/(^\+'.$customer_phone_dial_code.')/';
@@ -270,6 +275,10 @@ if (! class_exists('bookingpress_payment_gateways') ) {
                 'bookingpress_appointment_send_notifications' => 1,
                 'bookingpress_appointment_status'    => $bookingpress_appointment_status,
                 'bookingpress_paid_amount'           =>   $__payable_amount,
+                'bookingpress_selected_appointment_date' => $customer_selected_appointment_date,
+                'bookingpress_selected_appointment_end_date' => $customer_selected_appointment_end_date,
+                'bookingpress_selected_appointment_time' => $customer_selected_appointment_time,
+                'bookingpress_selected_appointment_end_time' => $customer_selected_appointment_end_time,
                 'bookingpress_created_at'            => current_time('mysql'),
                 );
 
@@ -370,6 +379,11 @@ if (! class_exists('bookingpress_payment_gateways') ) {
                     $bookingpress_appointment_send_notifications = $entry_data['bookingpress_appointment_send_notifications'];
                     $bookingpress_appointment_status             = $entry_data['bookingpress_appointment_status'];
 
+                    $bookingpress_selected_appointment_date      = $entry_data['bookingpress_selected_appointment_date'];
+                    $bookingpress_selected_appointment_end_date  = $entry_data['bookingpress_selected_appointment_end_date'];
+                    $bookingpress_selected_appointment_time      = $entry_data['bookingpress_selected_appointment_time'];
+                    $bookingpress_selected_appointment_end_time  = $entry_data['bookingpress_selected_appointment_end_time'];
+
                     $transaction_id = ( ! empty($transaction_id_field) && ! empty($payment_gateway_data[ $transaction_id_field ]) ) ? $payment_gateway_data[ $transaction_id_field ] : '';
                     $payable_amount = ( ! empty($payment_amount_field) && ! empty($payment_gateway_data[ $payment_amount_field ]) ) ? $payment_gateway_data[ $payment_amount_field ] : $bookingpress_service_price;
 
@@ -407,6 +421,10 @@ if (! class_exists('bookingpress_payment_gateways') ) {
                         'bookingpress_appointment_status' => $bookingpress_appointment_status,
                         'bookingpress_paid_amount' => $bookingpress_service_price,
                         'bookingpress_appointment_timezone' => $bookingpress_customer_timezone,
+                        'bookingpress_selected_appointment_date' => $bookingpress_selected_appointment_date,
+                        'bookingpress_selected_appointment_end_date' => $bookingpress_selected_appointment_end_date,
+                        'bookingpress_selected_appointment_time' => $bookingpress_selected_appointment_time,
+                        'bookingpress_selected_appointment_end_time' => $bookingpress_selected_appointment_end_time,
                         'bookingpress_created_at'         => current_time('mysql'),
                     );
                     

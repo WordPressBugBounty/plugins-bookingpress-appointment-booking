@@ -3,9 +3,9 @@ Contributors: reputeinfosystems
 Tags: booking, appointment, booking calendar, scheduling, booking system
 Donate link: https://bookingpressplugin.com/
 Requires at least: 5.3.0
-Tested up to: 6.6
+Tested up to: 6.6.2
 Requires PHP: 5.6
-Stable tag: 1.1.14
+Stable tag: 1.1.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,7 +82,7 @@ Note: BookingPress lite has many more cool features than other free WordPress bo
 * 🖌️ Fully customizable booking forms and customer panel
 * 💳 20+ new online payment gateways integration (PayPal, RazorPay, Stripe, Mollie, Authorize.net, 2Checkout, PagSeguro, Braintree, Worldpay, Paystack, PayUMoney, PayPal Pro, PayFast, Square, Skrill, WooCommerce, Klarna, CCAvenue, Paddle, Mercado Pago, ECpay etc.)
 * 🗓️ Google, and Outlook calendar integrations.
-* 📽️ Integrations with Zoom, Zapier, Mailchimp, Aweber, Omnisend, Google ReCaptcha.
+* 📽️ Integrations with Zoom, Zapier, **ARMember**, Mailchimp, Aweber, Omnisend, Google ReCaptcha.
 * 📍 Manage Unlimited Business location
 * 😀 Happy Hours (Dynamic) Pricing
 * 📦 Service Package (create packages of multiple services)
@@ -140,6 +140,8 @@ Note: BookingPress lite has many more cool features than other free WordPress bo
 [Import/Export Tool](https://www.bookingpressplugin.com/documents/import-export-tool/) - The BookingPress Import/Export Tool is designed to streamline the secure transfer of your essential data, including Settings, Notifications, and all other BookingPress Configurations, with ease.
 
 [Auto-login user upon successful Booking](https://www.bookingpressplugin.com/documents/customer-settings/#autologin) - BookingPress offers a seamless auto-login for users 🤩 immediately after booking an appointment.
+
+[ARMember Integration](https://www.bookingpressplugin.com/addon/armember-addon/) - This powerful integration connects your BookingPress Plugin with the ARMember Membership Plugin, unlocking features like automatic membership discounts, seamless plan assignments upon booking, and an easy setup process.
 
 **GDPR ready** - We provide instruments to make your booking pages follow the GDPR compliance rules. You'll ask for the user's consent before processing any personal data.
 
@@ -213,6 +215,11 @@ Please follow the steps for installation:
 13. BookingPress - General Settings
 
 == Changelog ==
+
+= 1.1.15 =
+* Fixed: 'Appointment Date' & 'Created Date' sorting was not working on payments page.
+* Improved: Front-end Date & Time step loading performance
+* Other minor bug fixes
 
 = 1.1.14 =
 * Minor bug fixes

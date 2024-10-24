@@ -74,10 +74,7 @@ class PayPal {
 		$this->APISubject       = isset( $DataArray['APISubject'] ) ? $DataArray['APISubject'] : '';
 
 		if ( $this->Sandbox || $this->BetaSandbox ) {
-			// Show Errors
-			error_reporting( E_ALL );
-			ini_set( 'display_errors', '1' );
-
+			
 			if ( $this->BetaSandbox ) {
 				// Beta Sandbox
 				$this->APIUsername  = isset( $DataArray['APIUsername'] ) && $DataArray['APIUsername'] != '' ? $DataArray['APIUsername'] : '';

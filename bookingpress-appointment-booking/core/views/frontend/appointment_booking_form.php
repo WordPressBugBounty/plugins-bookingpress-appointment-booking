@@ -60,7 +60,6 @@ $bookingpress_summary_content_note = stripslashes_deep( $bookingpress_summary_co
                     <div class="bpa-front-tn-body">                        
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7c.55 0 1 .45 1 1v4c0 .55-.45 1-1 1s-1-.45-1-1V8c0-.55.45-1 1-1zm-.01-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm1-3h-2v-2h2v2z"/></svg>
                         <p>{{ is_error_msg }}</p>
-                        <!--<a href="#" class="close-icon"><span class="material-icons-round">close</span></a>-->
                     </div>
                 </div>
                 <div class="bpa-front-dc--body">
@@ -152,7 +151,6 @@ $bookingpress_summary_content_note = stripslashes_deep( $bookingpress_summary_co
                     <div class="bpa-front-tn-body">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7c.55 0 1 .45 1 1v4c0 .55-.45 1-1 1s-1-.45-1-1V8c0-.55.45-1 1-1zm-.01-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm1-3h-2v-2h2v2z"/></svg>
                         <p>{{ is_error_msg }}</p>
-                        <!--<a href="#" class="close-icon"><span class="material-icons-round">close</span></a>-->
                     </div>
                 </div>            
                 <div class="bpa-front-dc--body">
@@ -200,12 +198,7 @@ $bookingpress_summary_content_note = stripslashes_deep( $bookingpress_summary_co
                                 <div class="bpa-front--dt__wrapper">
                                     <div class="bpa-front--dt__col" :class="(isLoadDateTimeCalendarLoad == 0 ) ? 'bpa-front-dt-col__is-visible' : ''">
                                         <div class="bpa-front--dt__calendar">
-                                            <!-- <vue-cal small v-model="appointment_step_form_data.selected_date" :disable-views="['years', 'year', 'week', 'day']" :time="false" :dblclick-to-navigate="false" active-view="month" @cell-click="get_date_timings($event)" :min-date="jsCurrentDate" :selected-date="appointment_step_form_data.selected_date" :disable-days="days_off_disabled_dates" :max-date="booking_cal_maxdate" :locale="site_locale">
-                                                <template v-if="'de' == site_locale || 'cs' == site_locale" v-slot:weekday-heading="{ heading }">
-													<span>{{ heading.label.substring(0, 2) }}</span>
-												</template>
-                                            </vue-cal> -->
-                                            <v-date-picker v-if="bookingpress_current_tab == 'datetime'" mode="date" ref="bkp_front_calendar" :min-date="jsCurrentDate" :max-date="booking_cal_maxdate" v-model="appointment_step_form_data.selected_date" @dayclick="dayClicked" :disabled-dates="v_calendar_disable_dates" @update:v-month-page="bpaMoveMonth" :first-day-of-week="first_day_of_week" :locale="site_locale" class="bpa-front-v-date-picker" :masks="{weekdays: 'WWW'}" is-required :model-config="modelConfig" />
+                                            <v-date-picker v-if="bookingpress_current_tab == 'datetime'" mode="date" ref="bkp_front_calendar" :min-date="jsCurrentDate" :max-date="booking_cal_maxdate" v-model="appointment_step_form_data.selected_date" @dayclick="dayClicked" :disabled-dates="[{start:new Date(jsCurrentDate), end: new Date(booking_cal_maxdate)}]" :available-dates="v_calendar_available_dates" @update:v-month-page="bpaMoveMonth" :first-day-of-week="first_day_of_week" :locale="site_locale" class="bpa-front-v-date-picker" :masks="{weekdays: 'WWW'}" is-required :model-config="modelConfig" />
                                         </div>
                                     </div>
                                     <div class="bpa-front--dt__col" :class="(isLoadDateTimeCalendarLoad == 0 ) ? 'bpa-front-dt-col__is-visible' : ''">                                        
@@ -470,7 +463,7 @@ $bookingpress_summary_content_note = stripslashes_deep( $bookingpress_summary_co
 												</div>
 											</div>
                                             
-                                            <v-date-picker mode="date" :min-date="jsCurrentDate" :max-date="booking_cal_maxdate" v-model="appointment_step_form_data.selected_date" @dayclick="dayClicked" :disabled-dates="v_calendar_disable_dates" @update:v-month-page="bpaMoveMonthResponsive" :first-day-of-week="first_day_of_week" :locale="site_locale" class="bpa-front-v-date-picker" :masks="{weekdays: 'W'}" v-if="isLoadDateTimeCalendarLoad != '1' && bookingpress_current_tab == 'datetime'" is-required :model-config="modelConfig"  />
+                                            <v-date-picker mode="date" :min-date="jsCurrentDate" :max-date="booking_cal_maxdate"  ref="bkp_front_calendar_responsive" v-model="appointment_step_form_data.selected_date" @dayclick="dayClicked" :disabled-dates="[{start:new Date(jsCurrentDate), end: new Date(booking_cal_maxdate)}]" :available-dates="v_calendar_available_dates" @update:v-month-page="bpaMoveMonthResponsive" :first-day-of-week="first_day_of_week" :locale="site_locale" class="bpa-front-v-date-picker" :masks="{weekdays: 'W'}" v-if="isLoadDateTimeCalendarLoad != '1' && bookingpress_current_tab == 'datetime'" is-required :model-config="modelConfig"  />
 
                                         </div>
                                     </el-col>
@@ -725,7 +718,6 @@ $bookingpress_summary_content_note = stripslashes_deep( $bookingpress_summary_co
                     <div class="bpa-front-tn-body">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7c.55 0 1 .45 1 1v4c0 .55-.45 1-1 1s-1-.45-1-1V8c0-.55.45-1 1-1zm-.01-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm1-3h-2v-2h2v2z"/></svg>
                         <p>{{ is_error_msg }}</p>
-                        <!--<a href="#" class="bpa-close-icon"><span class="material-icons-round">close</span></a>-->
                     </div>
                 </div>
                 <div class="bpa-front-dc--body">
@@ -769,16 +761,6 @@ $bookingpress_summary_content_note = stripslashes_deep( $bookingpress_summary_co
                                                         </el-form-item>
                                                     </el-col>
                                                 </el-row>
-                                                <!-- <el-row :gutter="24" class="bpa-bd-fields-row">
-                                                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" v-for="customer_form_fields_data in customer_form_fields" v-if="customer_form_fields_data.field_name == 'note' && customer_form_fields_data.is_hide != '1'">
-                                                        <el-form-item :prop="customer_form_fields_data.v_model_value" :ref="customer_form_fields_data.field_name">
-                                                            <template #label>
-                                                                <span class="bpa-front-form-label">{{ customer_form_fields_data.label }}</span>        
-                                                            </template>
-                                                            <el-input type="textarea" v-model="appointment_step_form_data[customer_form_fields_data['v_model_value']]" class="bpa-front-form-control" :placeholder="customer_form_fields_data.placeholder"></el-input>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                </el-row> -->
                                             </div>
                                         </el-col>
                                     </el-form>
@@ -812,7 +794,6 @@ $bookingpress_summary_content_note = stripslashes_deep( $bookingpress_summary_co
                     <div class="bpa-front-tn-body">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7c.55 0 1 .45 1 1v4c0 .55-.45 1-1 1s-1-.45-1-1V8c0-.55.45-1 1-1zm-.01-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm1-3h-2v-2h2v2z"/></svg>
                         <p>{{ is_error_msg }}</p>
-                        <!--<a href="#" class="close-icon"><span class="material-icons-round">close</span></a>-->
                     </div>
                 </div>
                 <div class="bpa-front-dc--body">
