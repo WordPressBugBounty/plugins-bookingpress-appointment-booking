@@ -527,7 +527,11 @@ if (! class_exists('bookingpress_import_export') ) {
                                                     $import_data_v = $import_record_data[$i][$key];
                                                     $import_data_v = $this->bookingpress_import_value_modified($import_data_v,$detail_import_detail_type,$key);
                                                     if($import_data_v == 'null' || is_null($import_data_v)){
-                                                        $single_import_record[$key] = NULL;
+                                                        if( $key == 'bookingpress_selected_appointment_date' || $key == 'bookingpress_selected_appointment_end_date' || $key == 'bookingpress_selected_appointment_time' || $key == 'bookingpress_selected_appointment_end_time'){
+                                                            $single_import_record[$key] = 0;
+                                                        } else {
+                                                            $single_import_record[$key] = NULL;
+                                                        }
                                                     }else{
                                                         $single_import_record[$key] = $import_data_v;
                                                     }     
@@ -664,7 +668,13 @@ if (! class_exists('bookingpress_import_export') ) {
                                                             $import_data_v = $value;
                                                             $import_data_v = $this->bookingpress_import_value_modified($import_data_v,$detail_import_detail_type,$key);
                                                             if($import_data_v == 'null' || is_null($import_data_v)){
-                                                                $appointment_entry_record[$key] = NULL;
+
+                                                                if( $key == 'bookingpress_selected_appointment_date' || $key == 'bookingpress_selected_appointment_end_date' || $key == 'bookingpress_selected_appointment_time' || $key == 'bookingpress_selected_appointment_end_time'){
+                                                                    $appointment_entry_record[$key] = 0;
+                                                                } else {
+                                                                    $appointment_entry_record[$key] = NULL;
+                                                                }
+                                                                
                                                             }else{
                                                                 $appointment_entry_record[$key] = $import_data_v;
                                                             }     

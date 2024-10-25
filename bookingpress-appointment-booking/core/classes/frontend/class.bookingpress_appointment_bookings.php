@@ -4480,6 +4480,8 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             
             $service_temp_timings = $service_timings;
 
+            
+
             if( !empty( $total_booked_appiontments ) && !empty( $service_timings ) ){
                 foreach( $total_booked_appiontments as $booked_appointment_data ){
                     $total_guests = 0;
@@ -7947,6 +7949,9 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
 			},
 			displayCalendar(){
 				const vm = this;
+                if( "" == vm.appointment_step_form_data.selected_date ){
+                    return false;
+                }
 				vm.displayResponsiveCalendar = "1";
 			},
 			Change_front_appointment_description(service_id) {
@@ -8229,6 +8234,9 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                             "night_time":[]
                         };
                         vm.no_timeslot_available = true;
+                    }
+                    if( vm.current_screen_size != "desktop" && vm.appointment_step_form_data.selected_service_duration_unit != "d" ){
+                        vm.displayResponsiveCalendar = 0;
                     }
                     vm.isLoadTimeLoader = "0";
                     vm.isLoadDateTimeCalendarLoad = "0";

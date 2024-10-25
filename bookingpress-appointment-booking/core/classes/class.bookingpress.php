@@ -2007,7 +2007,7 @@ if (! class_exists('BookingPress') ) {
         {
             global $bookingpress_version;
             $bookingpress_old_version = get_option('bookingpress_version', true);
-            if (version_compare($bookingpress_old_version, '1.1.15', '<') ) {
+            if (version_compare($bookingpress_old_version, '1.1.16', '<') ) {
                 $bookingpress_load_upgrade_file = BOOKINGPRESS_VIEWS_DIR . '/upgrade_latest_data.php';
                 include $bookingpress_load_upgrade_file;
                 $this->bookingpress_send_anonymous_data_cron();
@@ -6162,11 +6162,9 @@ if (! class_exists('BookingPress') ) {
                         'break_start_time' => date( 'H:i', strtotime( $default_workhour_data['bookingpress_start_time'] ) ),
                         'break_end_time' => date('H:i', strtotime( $default_workhour_data['bookingpress_end_time'] ) )
                     );
-
                     $workhours_break_data[]  = $break_data;
                 }
             }
-
             
 
             if( !empty( $get_default_work_hours_data ) ){
@@ -6184,7 +6182,7 @@ if (! class_exists('BookingPress') ) {
 
                     
                     while( $startDateTime <= $endDateTime ){
-    
+                        
                         $slotStart = $startDateTime;
                         $slotEnd = clone $slotStart;
                         $slotEnd->add( new DateInterval( 'PT'.$service_step_duration_val . 'M' ) );
@@ -6231,18 +6229,19 @@ if (! class_exists('BookingPress') ) {
                                     foreach( $workhours_break_data as $break_hour_data ){
                                         $break_start_time = new DateTime( $selected_date .' '. $break_hour_data['break_start_time'], new DateTimeZone( wp_timezone_string() ) );
                                         $break_end_time = new DateTime( $selected_date .' '. $break_hour_data['break_end_time'], new DateTimeZone( wp_timezone_string() ) );
-                    
-                                        if( $slotStart < $break_end_time && $slotEnd > $break_start_time ){
+
+                                        if( ($break_start_time >= $slotStart && $break_end_time <= $slotEnd ) || ( $break_start_time < $slotEnd && $break_end_time > $slotStart ) ){
                                             $is_break = true;
+                                            break;
                                         }
                                     }
                                 }
                     
                                 if( true == $is_break ){
-                                    $startDateTime->add( $interval );
+                                    $startDateTime = $break_end_time;
                                     continue;
                                 }
-                    
+
                                 $service_timing_arr = array(
                                     'start_time' => $service_tmp_current_time,
                                     'end_time'   => $service_current_time,
