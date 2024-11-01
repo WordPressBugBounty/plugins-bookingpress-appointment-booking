@@ -1726,6 +1726,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             /** apply filter to modify start date. in case of Minimum Time Required Booking */
             $bookingpress_start_date = apply_filters( 'bookingpress_modify_disable_date_start_date', $bookingpress_start_date, $bookingpress_selected_service, $bookingpress_start_date_with_time );
 
+
             $bookingpress_start_date_without_time = date('Y-m-d', strtotime( $bookingpress_start_date ) );
             
             /** Get the default days off in the above limit */
@@ -1769,6 +1770,11 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             }
 
             $where_clause .= $wpdb->prepare( ' AND (bookingpress_appointment_status = %s OR bookingpress_appointment_status = %s)', '1', '2' );
+
+            if( strtotime( $bookingpress_start_date ) == strtotime( $bpa_end_date->format('Y-m-d') ) ){
+                $bpa_end_date = new DateTime( date('Y-m-d', strtotime( 'last day of this month', strtotime( $bpa_end_date->format('Y-m-d') ) ) ) );
+                $period = new DatePeriod($bpa_begin_date, $bpa_interval, $bpa_end_date);
+            }
 
             $booked_check_dates = [];
             foreach( $period as $dt ){
@@ -1885,6 +1891,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                 $max_end_date = $working_hour_updated_data['next_month_date'];
                 $preselected_date = $working_hour_updated_data['pre_selected_date'];
                 $stop_check = $working_hour_updated_data['stop_check'];
+                $selected_date = $working_hour_updated_data['selected_date'];
             }
 
             /** Reputelog - new code - need to check for optimization End */
@@ -1902,10 +1909,12 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             $response['bpa_disabled_dates'] = $bpa_retrieves_default_disabled_dates;
             $response['stop_check'] = ( false == $stop_check && ( $bookingpress_max_date <= $max_end_date ) ) ? true : $stop_check;
             $response['variant'] = 'success';
+            $response['selected_date']  = $selected_date;
+            
             if( true == $return ){
                 return $response;
             }
-			$response['selected_date']  = $selected_date;
+            
             $response['max_capacity_capacity'] = $max_service_capacity;
             
             $end_ms = microtime( true );
