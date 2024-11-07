@@ -1627,7 +1627,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             die;
         }
 
-        function bookingpress_retrieve_timeslot_data_callback( $start_date = '', $return = false ){
+        function bookingpress_retrieve_timeslot_data_callback( $start_date = '', $return = false, $use_start_date = false ){
 
             $start_ms = microtime( true );
             global $wpdb, $BookingPress, $tbl_bookingpress_appointment_bookings, $bookingpress_appointment_bookings, $tbl_bookingpress_payment_logs, $tbl_bookingpress_default_workhours;
@@ -1734,7 +1734,9 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
 
             //$bpa_retrieves_default_disabled_dates = array_merge( $bpa_retrieves_default_disabled_dates, $posted_disabled_dates );
 
-            if( !empty( $selected_date ) ){
+            if( true == $use_start_date ){
+                $bookingpress_end_date = date( 'Y-m-d', strtotime( 'last day of this month', strtotime( $start_date ) ) );
+            } else if( !empty( $selected_date ) ){
                 $bookingpress_end_date = date( 'Y-m-d', strtotime( 'last day of this month', strtotime( $selected_date ) ) );
             } else {
                 $bookingpress_end_date = date( 'Y-m-d', strtotime( 'last day of this month', strtotime( $bookingpress_start_date ) ) );
@@ -1883,7 +1885,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             }
 
             if( empty( $working_hour_details ) && false == $stop_check ){
-                $working_hour_updated_data = $this->bookingpress_retrieve_timeslot_data_callback( $max_end_date, true );
+                $working_hour_updated_data = $this->bookingpress_retrieve_timeslot_data_callback( $max_end_date, true, true );
                 
                 $working_hour_details = $working_hour_updated_data['working_details'];
                 $working_hour_timing_token = $working_hour_updated_data['working_hour_timing_token'];
@@ -3719,7 +3721,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                     foreach($appointment_data as $appointment_data_key => $appointment_data_val){
                         $content .= "<div class='bookingpress_appointment_datetime_div'>";
                         $check_timezone = false;
-                        if( !empty( $appointment_data_val['bookingpress_selected_appointment_date'] ) && !empty( $appointment_data_val['bookingpress_selected_appointment_time'] ) && '0000-00-00' != $appointment_data_val['bookingpress_selected_appointment_date'] && '00:00:00' != $appointment_data['bookingpress_selected_appointment_time'] ){
+                        if( !empty( $appointment_data_val['bookingpress_selected_appointment_date'] ) && !empty( $appointment_data_val['bookingpress_selected_appointment_time'] ) && '0000-00-00' != $appointment_data_val['bookingpress_selected_appointment_date'] && '00:00:00' != $appointment_data_val['bookingpress_selected_appointment_time'] ){
                             $booked_appointment_datetime = esc_html($appointment_data_val['bookingpress_selected_appointment_date']) . ' ' . esc_html($appointment_data_val['bookingpress_selected_appointment_time']);
                         } else {
                             $check_timezone = true;

@@ -2015,7 +2015,7 @@ if (! class_exists('BookingPress') ) {
         {
             global $bookingpress_version;
             $bookingpress_old_version = get_option('bookingpress_version', true);
-            if (version_compare($bookingpress_old_version, '1.1.18', '<') ) {
+            if (version_compare($bookingpress_old_version, '1.1.19', '<') ) {
                 $bookingpress_load_upgrade_file = BOOKINGPRESS_VIEWS_DIR . '/upgrade_latest_data.php';
                 include $bookingpress_load_upgrade_file;
                 $this->bookingpress_send_anonymous_data_cron();
@@ -6005,6 +6005,13 @@ if (! class_exists('BookingPress') ) {
 
             $bookingpress_options = $bookingpress_global_options->bookingpress_global_options();
             $bookingpress_timezone_offset = $bookingpress_options['bookingpress_timezone_offset'];
+
+            $bookingpress_exceptional_timezone = ['America/St_Johns','Australia/Adelaide', 'Australia/Broken_Hill', 'Pacific/Chatham'];
+            $bookingpress_exceptional_timezone = apply_filters( 'bookingpress_exclude_timezone_converstion_to_offset', $bookingpress_exceptional_timezone );
+
+            if( in_array( $timezone_string, $bookingpress_exceptional_timezone ) ){
+                return $timezone_string;
+            }
             
             if( 'UTC' == $timezone_string){
                 return '+00:00';

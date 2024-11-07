@@ -1432,6 +1432,8 @@ if (! class_exists('bookingpress_services') ) {
                 $wpdb->insert($tbl_bookingpress_servicesmeta, $args);
                 $servicemeta_id = $wpdb->insert_id;
             }
+            $servicemeta_setting_key =  $service_id."|^|".$meta_key;
+            wp_cache_delete( $servicemeta_setting_key );
             return $servicemeta_id;
         }
 
