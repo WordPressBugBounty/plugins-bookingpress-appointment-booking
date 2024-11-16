@@ -3,9 +3,9 @@ Contributors: reputeinfosystems
 Tags: booking, appointment, booking calendar, scheduling, booking system
 Donate link: https://bookingpressplugin.com/
 Requires at least: 5.3.0
-Tested up to: 6.6.2
+Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 1.1.19
+Stable tag: 1.1.20
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,7 +80,7 @@ Note: BookingPress lite has many more cool features than other free WordPress bo
 * 📊 Advanced staff dashboard for staff members.
 * 📝 Invoicing feature with pdf support.
 * 🖌️ Fully customizable booking forms and customer panel
-* 💳 20+ new online payment gateways integration (PayPal, RazorPay, Stripe, Mollie, Authorize.net, 2Checkout, PagSeguro, Braintree, Worldpay, Paystack, PayUMoney, PayPal Pro, PayFast, Square, Skrill, WooCommerce, Klarna, CCAvenue, Paddle, Mercado Pago, ECpay etc.)
+* 💳 20+ new online payment gateways integration (PayPal, RazorPay, Stripe, Mollie, Authorize.net, 2Checkout, PagSeguro, Braintree, Worldpay, Paystack, PayUMoney, PayPal Pro, PayFast, Square, Skrill, WooCommerce, Klarna, CCAvenue, Paddle, Mercado Pago, ECpay, PayMongo etc.)
 * 🗓️ Google, and Outlook calendar integrations.
 * 📽️ Integrations with Zoom, Zapier, **ARMember**, Mailchimp, Aweber, Omnisend, Google ReCaptcha.
 * 📍 Manage Unlimited Business location
@@ -216,22 +216,14 @@ Please follow the steps for installation:
 
 == Changelog ==
 
+= 1.1.20 =
+* Minor bug fixes
+
 = 1.1.19 =
 * Minor bug fixes
 
 = 1.1.18 =
 * Minor bug fixes
-
-= 1.1.17 =
-* Minor bug fixes
-
-= 1.1.16 =
-* Minor bug fixes
-
-= 1.1.15 =
-* Fixed: 'Appointment Date' & 'Created Date' sorting was not working on payments page.
-* Improved: Front-end Date & Time step loading performance
-* Other minor bug fixes
 
 For a complete list of changelogs of earlier versions, please check the website [here](https://www.bookingpressplugin.com/documents/changelog/#free-version)
 

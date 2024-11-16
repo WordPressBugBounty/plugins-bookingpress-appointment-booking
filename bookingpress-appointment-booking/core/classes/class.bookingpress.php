@@ -234,7 +234,7 @@ if (! class_exists('BookingPress') ) {
 
         function bookingpress_get_bf_sale_start_time(){
 
-            $start_time = '1718184600';
+            $start_time = '1731936600';
 
             $fetch_dates_transient = get_transient( 'bookingpress_retrieve_bf_sale_dates' );
 
@@ -264,7 +264,7 @@ if (! class_exists('BookingPress') ) {
 
         function bookingpress_get_bf_sale_end_time(){
             
-            $end_time = '1719232200';
+            $end_time = '1733571000';
 
             $fetch_dates_transient = get_transient( 'bookingpress_retrieve_bf_sale_dates' );
 
@@ -2015,7 +2015,7 @@ if (! class_exists('BookingPress') ) {
         {
             global $bookingpress_version;
             $bookingpress_old_version = get_option('bookingpress_version', true);
-            if (version_compare($bookingpress_old_version, '1.1.19', '<') ) {
+            if (version_compare($bookingpress_old_version, '1.1.20', '<') ) {
                 $bookingpress_load_upgrade_file = BOOKINGPRESS_VIEWS_DIR . '/upgrade_latest_data.php';
                 include $bookingpress_load_upgrade_file;
                 $this->bookingpress_send_anonymous_data_cron();
@@ -2440,7 +2440,7 @@ if (! class_exists('BookingPress') ) {
                                 window.open('https://www.bookingpressplugin.com/pricing/?utm_source=liteversion&utm_medium=plugin&utm_campaign=Upgrade+to+Premium&utm_id=bookingpress_2', '_blank');
                             },
                             bookingpress_redirect_sale_premium_page(){
-                                window.open('https://www.bookingpressplugin.com/pricing/?utm_source=liteversion&utm_medium=popup&utm_campaign=LTD', '_blank');
+                                window.open('https://www.bookingpressplugin.com/pricing/?utm_source=liteversion&utm_medium=plugin&utm_campaign=BFCM_2024&utm_id=bookingpress_2', '_blank');
                             },
                             bookingpress_redirect_lite_vs_preminum_page(){
                                 window.open('https://www.bookingpressplugin.com/bookingpress-lite-vs-premium', '_blank');
@@ -4532,7 +4532,7 @@ if (! class_exists('BookingPress') ) {
             $bpa_bf_popup_end_time = $this->bookingpress_get_bf_sale_end_time();
 
             if( $bpa_current_date_for_bf_popup >= $bpa_bf_popup_start_time && $bpa_current_date_for_bf_popup <= $bpa_bf_popup_end_time ){
-                $upgrade_menu_text = esc_html__( '#WCEU Sale', 'bookingpress-appointment-booking' );
+                $upgrade_menu_text = esc_html__( 'Black Friday Sale 🔥', 'bookingpress-appointment-booking' );
             }
             
             add_submenu_page($bookingpress_slugs->bookingpress, $upgrade_menu_text, $upgrade_menu_text, 'bookingpress', $bookingpress_slugs->bookingpress."&upgrade_action=upgrade_to_pro", array( $this, 'route' ));
@@ -5637,7 +5637,7 @@ if (! class_exists('BookingPress') ) {
 
         public function bookingpress_retrieve_off_days( $start_date = '', $number_of_days = 366, $selected_service = '', $selected_service_duration = '', $selected_staffmember = '' ){
 
-            global $wpdb, $tbl_bookingpress_default_daysoff, $tbl_bookingpress_default_workhours;
+            global $wpdb, $tbl_bookingpress_default_daysoff, $tbl_bookingpress_default_workhours, $BookingPress;
 
             $current_date = date( 'Y-m-d', current_time('timestamp') );
 
@@ -5701,7 +5701,7 @@ if (! class_exists('BookingPress') ) {
             $default_off_days = apply_filters( 'bookingpress_modify_default_off_days', $default_off_days, $selected_service, $selected_service_duration, $selected_staffmember );
             
             if( false == $default_off_days['skip_check'] ){
-                $bookingpress_off_days_data = $wpdb->get_results( $wpdb->prepare( "SELECT LOWER(bookingpress_workday_key) AS bookingpress_workday_key FROM {$tbl_bookingpress_default_workhours} WHERE (bookingpress_start_time IS NULL OR ( ABS( TIME_TO_SEC( TIMEDIFF( bookingpress_start_Time, ( CASE WHEN bookingpress_end_time = '00:00:00' THEN '24:00:00' ELSE bookingpress_end_time END ) ) ) DIV 60 ) < %d ) ) AND bookingpress_is_break = %d", $selected_service_duration, 0 ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Reason: $tbl_bookingpress_default_workhours is table name defined globally. False Positive alarm         
+                $bookingpress_off_days_data = $wpdb->get_results( $wpdb->prepare( "SELECT LOWER(bookingpress_workday_key) AS bookingpress_workday_key FROM {$tbl_bookingpress_default_workhours} WHERE (bookingpress_start_time IS NULL OR ( ABS( TIME_TO_SEC( TIMEDIFF( bookingpress_start_Time, ( CASE WHEN bookingpress_end_time = '00:00:00' THEN '24:00:00' ELSE bookingpress_end_time END ) ) ) DIV 60 ) < %d ) ) AND bookingpress_is_break = %d", $selected_service_duration, 0 ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Reason: $tbl_bookingpress_default_workhours is table name defined globally. False Positive alarm
 
                 if( !empty( $bookingpress_off_days_data ) ){
                     foreach( $bookingpress_off_days_data as $bpa_default_workdata ){
@@ -5718,7 +5718,6 @@ if (! class_exists('BookingPress') ) {
 
             $bpa_interval = DateInterval::createFromDateString('1 day');
             $period = new DatePeriod($bpa_begin_date, $bpa_interval, $bpa_end_date);
-
 
             $default_daysoff_dates = array();
 

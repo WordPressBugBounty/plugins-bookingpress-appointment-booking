@@ -82,7 +82,7 @@ $bookingpress_user_type = array(
 );
 
 global $bookingpress_version;
-$bookingpress_version = '1.1.19';
+$bookingpress_version = '1.1.20';
 define('BOOKINGPRESS_VERSION', $bookingpress_version);
 
 global $bookingpress_ajaxurl;
