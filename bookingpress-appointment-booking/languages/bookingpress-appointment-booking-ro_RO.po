@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: BookingPress Appointment Booking v1.1.20\n"
+"Project-Id-Version: BookingPress Appointment Booking v1.1.21\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2024-11-16 04:45:21+0000\n"
+"PO-Revision-Date: 2024-11-22 05:59:04+0000\n"
 "Last-Translator: admin <testrepute@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -254,24 +254,24 @@ msgstr "Ne pare rău, cererea dvs. nu poate fi procesată din motive de securita
 #: core/classes/class.bookingpress_growth_tools.php:195
 #: core/classes/class.bookingpress_import_export.php:419
 #: core/classes/class.bookingpress_import_export.php:429
-#: core/classes/class.bookingpress_import_export.php:1516
-#: core/classes/class.bookingpress_import_export.php:1526
-#: core/classes/class.bookingpress_import_export.php:1541
-#: core/classes/class.bookingpress_import_export.php:1577
-#: core/classes/class.bookingpress_import_export.php:1587
-#: core/classes/class.bookingpress_import_export.php:1613
-#: core/classes/class.bookingpress_import_export.php:1647
-#: core/classes/class.bookingpress_import_export.php:1750
-#: core/classes/class.bookingpress_import_export.php:1759
-#: core/classes/class.bookingpress_import_export.php:1797
-#: core/classes/class.bookingpress_import_export.php:1806
-#: core/classes/class.bookingpress_import_export.php:2396
-#: core/classes/class.bookingpress_import_export.php:2429
-#: core/classes/class.bookingpress_import_export.php:3218
-#: core/classes/class.bookingpress_import_export.php:3276
-#: core/classes/class.bookingpress_import_export.php:3318
-#: core/classes/class.bookingpress_import_export.php:3379
-#: core/classes/class.bookingpress_import_export.php:3419
+#: core/classes/class.bookingpress_import_export.php:1521
+#: core/classes/class.bookingpress_import_export.php:1531
+#: core/classes/class.bookingpress_import_export.php:1546
+#: core/classes/class.bookingpress_import_export.php:1582
+#: core/classes/class.bookingpress_import_export.php:1592
+#: core/classes/class.bookingpress_import_export.php:1618
+#: core/classes/class.bookingpress_import_export.php:1652
+#: core/classes/class.bookingpress_import_export.php:1755
+#: core/classes/class.bookingpress_import_export.php:1764
+#: core/classes/class.bookingpress_import_export.php:1802
+#: core/classes/class.bookingpress_import_export.php:1811
+#: core/classes/class.bookingpress_import_export.php:2401
+#: core/classes/class.bookingpress_import_export.php:2434
+#: core/classes/class.bookingpress_import_export.php:3223
+#: core/classes/class.bookingpress_import_export.php:3281
+#: core/classes/class.bookingpress_import_export.php:3323
+#: core/classes/class.bookingpress_import_export.php:3384
+#: core/classes/class.bookingpress_import_export.php:3424
 #: core/classes/class.bookingpress_notifications.php:237
 #: core/classes/class.bookingpress_notifications.php:311
 #: core/classes/class.bookingpress_notifications.php:459
@@ -449,8 +449,8 @@ msgstr "Ne pare rău, cererea dvs. nu poate fi procesată din motive de securita
 #: core/classes/frontend/class.bookingpress_appointment_bookings.php:4272
 #: core/classes/frontend/class.bookingpress_appointment_bookings.php:4367
 #: core/classes/frontend/class.bookingpress_appointment_bookings.php:4898
-#: core/classes/frontend/class.bookingpress_appointment_bookings.php:9661
-#: core/classes/frontend/class.bookingpress_appointment_bookings.php:9723
+#: core/classes/frontend/class.bookingpress_appointment_bookings.php:9668
+#: core/classes/frontend/class.bookingpress_appointment_bookings.php:9730
 #: core/classes/frontend/class.bookingpress_spam_protection.php:58
 #@ bookingpress-appointment-booking
 msgid "Error"
@@ -497,17 +497,17 @@ msgstr "Eroare"
 #: core/classes/class.bookingpress_growth_tools.php:91
 #: core/classes/class.bookingpress_growth_tools.php:174
 #: core/classes/class.bookingpress_growth_tools.php:256
-#: core/classes/class.bookingpress_import_export.php:1466
-#: core/classes/class.bookingpress_import_export.php:1467
-#: core/classes/class.bookingpress_import_export.php:1476
-#: core/classes/class.bookingpress_import_export.php:1726
-#: core/classes/class.bookingpress_import_export.php:1772
-#: core/classes/class.bookingpress_import_export.php:1773
-#: core/classes/class.bookingpress_import_export.php:2046
-#: core/classes/class.bookingpress_import_export.php:2047
-#: core/classes/class.bookingpress_import_export.php:2066
-#: core/classes/class.bookingpress_import_export.php:2084
-#: core/classes/class.bookingpress_import_export.php:2602
+#: core/classes/class.bookingpress_import_export.php:1471
+#: core/classes/class.bookingpress_import_export.php:1472
+#: core/classes/class.bookingpress_import_export.php:1481
+#: core/classes/class.bookingpress_import_export.php:1731
+#: core/classes/class.bookingpress_import_export.php:1777
+#: core/classes/class.bookingpress_import_export.php:1778
+#: core/classes/class.bookingpress_import_export.php:2051
+#: core/classes/class.bookingpress_import_export.php:2052
+#: core/classes/class.bookingpress_import_export.php:2071
+#: core/classes/class.bookingpress_import_export.php:2089
+#: core/classes/class.bookingpress_import_export.php:2607
 #: core/classes/class.bookingpress_notifications.php:521
 #: core/classes/class.bookingpress_notifications.php:589
 #: core/classes/class.bookingpress_payment.php:59
@@ -600,7 +600,7 @@ msgstr "Vă rugăm să încărcați numai fișierul de maximum 1 MB"
 #: core/classes/class.bookingpress_settings.php:1372
 #: core/classes/class.bookingpress_settings.php:1418
 #: core/classes/class.bookingpress_settings.php:2214
-#: core/classes/frontend/class.bookingpress_appointment_bookings.php:7895
+#: core/classes/frontend/class.bookingpress_appointment_bookings.php:7902
 #@ bookingpress-appointment-booking
 msgid "Something went wrong"
 msgstr "Ceva n-a mers bine"
@@ -652,11 +652,11 @@ msgstr "Ceva n-a mers bine"
 #: core/classes/class.bookingpress_email_notifications.php:253
 #: core/classes/class.bookingpress_email_notifications.php:669
 #: core/classes/class.bookingpress_email_notifications.php:922
-#: core/classes/class.bookingpress_import_export.php:3219
-#: core/classes/class.bookingpress_import_export.php:3277
-#: core/classes/class.bookingpress_import_export.php:3319
-#: core/classes/class.bookingpress_import_export.php:3380
-#: core/classes/class.bookingpress_import_export.php:3420
+#: core/classes/class.bookingpress_import_export.php:3224
+#: core/classes/class.bookingpress_import_export.php:3282
+#: core/classes/class.bookingpress_import_export.php:3324
+#: core/classes/class.bookingpress_import_export.php:3385
+#: core/classes/class.bookingpress_import_export.php:3425
 #: core/classes/class.bookingpress_notifications.php:238
 #: core/classes/class.bookingpress_notifications.php:312
 #: core/classes/class.bookingpress_notifications.php:467
@@ -711,8 +711,8 @@ msgstr "Ceva n-a mers bine"
 #: core/classes/frontend/class.bookingpress_appointment_bookings.php:1011
 #: core/classes/frontend/class.bookingpress_appointment_bookings.php:3089
 #: core/classes/frontend/class.bookingpress_appointment_bookings.php:4109
-#: core/classes/frontend/class.bookingpress_appointment_bookings.php:9662
-#: core/classes/frontend/class.bookingpress_appointment_bookings.php:9724
+#: core/classes/frontend/class.bookingpress_appointment_bookings.php:9669
+#: core/classes/frontend/class.bookingpress_appointment_bookings.php:9731
 #@ bookingpress-appointment-booking
 msgid "Something went wrong.."
 msgstr "Ceva n-a mers bine.."
@@ -843,9 +843,9 @@ msgid "I understand the risk"
 msgstr "Înțeleg riscul"
 
 #: core/classes/class.bookingpress.php:1866
-#: core/classes/class.bookingpress_import_export.php:3011
-#: core/classes/class.bookingpress_import_export.php:3082
-#: core/classes/class.bookingpress_import_export.php:3346
+#: core/classes/class.bookingpress_import_export.php:3016
+#: core/classes/class.bookingpress_import_export.php:3087
+#: core/classes/class.bookingpress_import_export.php:3351
 #: core/classes/frontend/class.bookingpress_appointment_bookings.php:1147
 #: core/views/appointment/manage_appointment.php:129
 #: core/views/appointment/manage_appointment.php:138
@@ -998,8 +998,8 @@ msgstr "Calendar"
 #: core/classes/class.bookingpress.php:3720
 #: core/classes/class.bookingpress.php:4508
 #: core/classes/class.bookingpress_dashboard.php:1021
-#: core/classes/class.bookingpress_import_export.php:2649
-#: core/classes/class.bookingpress_import_export.php:3153
+#: core/classes/class.bookingpress_import_export.php:2654
+#: core/classes/class.bookingpress_import_export.php:3158
 #: core/views/bookingpress_header.php:60
 #@ bookingpress-appointment-booking
 msgid "Appointments"
@@ -1017,8 +1017,8 @@ msgstr "Plăți"
 #: core/classes/class.bookingpress.php:4512
 #: core/classes/class.bookingpress_dashboard.php:1130
 #: core/classes/class.bookingpress_dashboard.php:1152
-#: core/classes/class.bookingpress_import_export.php:2645
-#: core/classes/class.bookingpress_import_export.php:3114
+#: core/classes/class.bookingpress_import_export.php:2650
+#: core/classes/class.bookingpress_import_export.php:3119
 #: core/views/bookingpress_header.php:86
 #: core/views/dashboard/manage_dashboard.php:43
 #@ bookingpress-appointment-booking
@@ -1029,8 +1029,8 @@ msgstr "Clienți"
 #: core/classes/class.bookingpress.php:4514
 #: core/classes/class.bookingpress_customize.php:136
 #: core/classes/class.bookingpress_customize.php:1447
-#: core/classes/class.bookingpress_import_export.php:2653
-#: core/classes/class.bookingpress_import_export.php:3118
+#: core/classes/class.bookingpress_import_export.php:2658
+#: core/classes/class.bookingpress_import_export.php:3123
 #: core/views/bookingpress_header.php:99
 #@ bookingpress-appointment-booking
 msgid "Services"
@@ -1038,8 +1038,8 @@ msgstr "Servicii"
 
 #: core/classes/class.bookingpress.php:3724
 #: core/classes/class.bookingpress.php:4516
-#: core/classes/class.bookingpress_import_export.php:2656
-#: core/classes/class.bookingpress_import_export.php:3149
+#: core/classes/class.bookingpress_import_export.php:2661
+#: core/classes/class.bookingpress_import_export.php:3154
 #: core/views/bookingpress_header.php:112
 #: core/views/settings/notification_setting_tab.php:5
 #@ bookingpress-appointment-booking
@@ -1048,7 +1048,7 @@ msgstr "Notificări"
 
 #: core/classes/class.bookingpress.php:3725
 #: core/classes/class.bookingpress.php:4518
-#: core/classes/class.bookingpress_import_export.php:3112
+#: core/classes/class.bookingpress_import_export.php:3117
 #: core/views/bookingpress_header.php:126
 #: core/views/customize/manage_form_customize.php:18
 #@ bookingpress-appointment-booking
@@ -1057,8 +1057,8 @@ msgstr "Personalizați"
 
 #: core/classes/class.bookingpress.php:3726
 #: core/classes/class.bookingpress.php:4520
-#: core/classes/class.bookingpress_import_export.php:2642
-#: core/classes/class.bookingpress_import_export.php:3111
+#: core/classes/class.bookingpress_import_export.php:2647
+#: core/classes/class.bookingpress_import_export.php:3116
 #: core/views/bookingpress_header.php:161
 #@ bookingpress-appointment-booking
 msgid "Settings"
@@ -1292,7 +1292,7 @@ msgstr "Nu există o programare pentru anulare"
 #: core/views/payment/manage_payment.php:585
 #: core/views/upgrade_latest_data.php:914
 #: core/views/upgrade_latest_data.php:1130
-#: core/views/wizard/manage_wizard.php:282
+#: core/views/wizard/manage_wizard.php:280
 #@ bookingpress-appointment-booking
 msgid "Service"
 msgstr "Serviciu"
@@ -1936,10 +1936,10 @@ msgstr "Confirmare anulare programare"
 #: core/classes/class.bookingpress_growth_tools.php:110
 #: core/classes/class.bookingpress_growth_tools.php:192
 #: core/classes/class.bookingpress_import_export.php:426
-#: core/classes/class.bookingpress_import_export.php:1523
-#: core/classes/class.bookingpress_import_export.php:1756
-#: core/classes/class.bookingpress_import_export.php:1803
-#: core/classes/class.bookingpress_import_export.php:2393
+#: core/classes/class.bookingpress_import_export.php:1528
+#: core/classes/class.bookingpress_import_export.php:1761
+#: core/classes/class.bookingpress_import_export.php:1808
+#: core/classes/class.bookingpress_import_export.php:2398
 #: core/classes/class.bookingpress_notifications.php:456
 #: core/classes/class.bookingpress_notifications.php:550
 #: core/classes/class.bookingpress_notifications.php:612
@@ -1999,7 +1999,7 @@ msgstr "descărcarea jurnalului cu succes"
 #: core/classes/class.bookingpress_appointment.php:1980
 #: core/classes/class.bookingpress_services.php:1169
 #: core/views/services/manage_services.php:501
-#: core/views/wizard/manage_wizard.php:310
+#: core/views/wizard/manage_wizard.php:308
 #@ bookingpress-appointment-booking
 msgid "Mins"
 msgstr "Min"
@@ -2019,7 +2019,7 @@ msgstr "Zile"
 #: core/classes/class.bookingpress_services.php:1176
 #: core/classes/frontend/class.bookingpress_appointment_bookings.php:3425
 #: core/views/services/manage_services.php:502
-#: core/views/wizard/manage_wizard.php:311
+#: core/views/wizard/manage_wizard.php:309
 #@ bookingpress-appointment-booking
 msgid "Hours"
 msgstr "Ore"
@@ -2064,8 +2064,8 @@ msgstr "Actiune in masa"
 
 #: core/classes/class.bookingpress_appointment.php:322
 #: core/classes/class.bookingpress_customers.php:81
-#: core/classes/class.bookingpress_import_export.php:3010
-#: core/classes/class.bookingpress_import_export.php:3081
+#: core/classes/class.bookingpress_import_export.php:3015
+#: core/classes/class.bookingpress_import_export.php:3086
 #: core/classes/class.bookingpress_payment.php:89
 #: core/classes/class.bookingpress_service_categories.php:48
 #: core/classes/class.bookingpress_services.php:58
@@ -2360,9 +2360,9 @@ msgstr "Nu mai arăta"
 #: core/classes/class.bookingpress_customize.php:187
 #: core/classes/class.bookingpress_customize.php:1511
 #: core/views/frontend/appointment_my_appointments.php:609
-#: core/views/wizard/manage_wizard.php:123
-#: core/views/wizard/manage_wizard.php:272
-#: core/views/wizard/manage_wizard.php:344
+#: core/views/wizard/manage_wizard.php:121
+#: core/views/wizard/manage_wizard.php:270
+#: core/views/wizard/manage_wizard.php:342
 #@ bookingpress-appointment-booking
 msgid "Next"
 msgstr "Următorul"
@@ -3485,12 +3485,12 @@ msgstr "Calendar Outlook"
 msgid "iCal Calendar"
 msgstr "Calendar iCal"
 
-#: core/classes/frontend/class.bookingpress_appointment_bookings.php:9923
+#: core/classes/frontend/class.bookingpress_appointment_bookings.php:9930
 #@ bookingpress-appointment-booking
 msgid "Please enter customer name"
 msgstr "Vă rugăm să introduceți numele clientului"
 
-#: core/classes/frontend/class.bookingpress_appointment_bookings.php:9928
+#: core/classes/frontend/class.bookingpress_appointment_bookings.php:9935
 #@ bookingpress-appointment-booking
 msgid "Please enter customer email"
 msgstr "Vă rugăm să introduceți adresa de e-mail a clientului"
@@ -3559,8 +3559,8 @@ msgstr "Distribuiți adresa URL"
 msgid "Appointment Date"
 msgstr "Data de intalnire"
 
-#: core/classes/class.bookingpress_import_export.php:2989
-#: core/classes/class.bookingpress_import_export.php:3060
+#: core/classes/class.bookingpress_import_export.php:2994
+#: core/classes/class.bookingpress_import_export.php:3065
 #: core/views/appointment/manage_appointment.php:36
 #: core/views/dashboard/manage_dashboard.php:18
 #: core/views/payment/manage_payment.php:19
@@ -3570,8 +3570,8 @@ msgstr "Data de intalnire"
 msgid "Start date"
 msgstr "Data de început"
 
-#: core/classes/class.bookingpress_import_export.php:2989
-#: core/classes/class.bookingpress_import_export.php:3060
+#: core/classes/class.bookingpress_import_export.php:2994
+#: core/classes/class.bookingpress_import_export.php:3065
 #: core/views/appointment/manage_appointment.php:36
 #: core/views/settings/debug_log_settings.php:72
 #: core/views/settings/debug_log_settings.php:146
@@ -3637,7 +3637,7 @@ msgstr "Nicio inregistrare gasita!"
 #: core/views/dashboard/manage_dashboard.php:306
 #: core/views/dashboard/manage_dashboard.php:489
 #: core/views/services/manage_services.php:329
-#: core/views/wizard/manage_wizard.php:535
+#: core/views/wizard/manage_wizard.php:533
 #@ bookingpress-appointment-booking
 msgid "Close"
 msgstr "Închide"
@@ -4131,7 +4131,7 @@ msgstr "Editați clientul"
 #: core/views/customers/manage_customers.php:298
 #: core/views/services/manage_services.php:449
 #: core/views/settings/company_setting_tab.php:35
-#: core/views/wizard/manage_wizard.php:98
+#: core/views/wizard/manage_wizard.php:96
 #@ bookingpress-appointment-booking
 msgid "Please upload jpg/png/webp file"
 msgstr "Vă rugăm să încărcați fișierul jpg/png/webp"
@@ -4833,9 +4833,9 @@ msgid "paid by admin"
 msgstr "platit de admin"
 
 #: core/views/frontend/appointment_my_appointments.php:609
-#: core/views/wizard/manage_wizard.php:269
-#: core/views/wizard/manage_wizard.php:341
-#: core/views/wizard/manage_wizard.php:427
+#: core/views/wizard/manage_wizard.php:267
+#: core/views/wizard/manage_wizard.php:339
+#: core/views/wizard/manage_wizard.php:425
 #@ bookingpress-appointment-booking
 msgid "Prev"
 msgstr "Prev"
@@ -5168,7 +5168,7 @@ msgid "Enter company name"
 msgstr "Introduceți numele companiei"
 
 #: core/views/settings/company_setting_tab.php:57
-#: core/views/wizard/manage_wizard.php:46
+#: core/views/wizard/manage_wizard.php:44
 #@ bookingpress-appointment-booking
 msgid "Address"
 msgstr "Abordare"
@@ -5179,7 +5179,7 @@ msgid "Enter company address"
 msgstr "Introdu adresa companiei"
 
 #: core/views/settings/company_setting_tab.php:67
-#: core/views/wizard/manage_wizard.php:87
+#: core/views/wizard/manage_wizard.php:85
 #@ bookingpress-appointment-booking
 msgid "Website"
 msgstr "Site-ul web"
@@ -5259,24 +5259,24 @@ msgstr "Metoda pe site"
 msgid "On-Site"
 msgstr "Pe site-ul"
 
-#: core/classes/class.bookingpress_import_export.php:2970
-#: core/classes/class.bookingpress_import_export.php:3041
+#: core/classes/class.bookingpress_import_export.php:2975
+#: core/classes/class.bookingpress_import_export.php:3046
 #: core/views/settings/debug_log_settings.php:50
 #: core/views/settings/debug_log_settings.php:124
 #@ bookingpress-appointment-booking
 msgid "View log"
 msgstr "Vizualizare jurnal"
 
-#: core/classes/class.bookingpress_import_export.php:2978
-#: core/classes/class.bookingpress_import_export.php:3049
+#: core/classes/class.bookingpress_import_export.php:2983
+#: core/classes/class.bookingpress_import_export.php:3054
 #: core/views/settings/debug_log_settings.php:61
 #: core/views/settings/debug_log_settings.php:135
 #@ bookingpress-appointment-booking
 msgid "Select log duration to download"
 msgstr "Selectați durata jurnalului de descărcat"
 
-#: core/classes/class.bookingpress_import_export.php:2995
-#: core/classes/class.bookingpress_import_export.php:3066
+#: core/classes/class.bookingpress_import_export.php:3000
+#: core/classes/class.bookingpress_import_export.php:3071
 #: core/views/settings/debug_log_settings.php:78
 #: core/views/settings/debug_log_settings.php:152
 #@ bookingpress-appointment-booking
@@ -5289,8 +5289,8 @@ msgstr "Descarca"
 msgid "Download log"
 msgstr "Descărcați jurnalul"
 
-#: core/classes/class.bookingpress_import_export.php:3013
-#: core/classes/class.bookingpress_import_export.php:3084
+#: core/classes/class.bookingpress_import_export.php:3018
+#: core/classes/class.bookingpress_import_export.php:3089
 #: core/views/settings/debug_log_settings.php:96
 #: core/views/settings/debug_log_settings.php:170
 #@ bookingpress-appointment-booking
@@ -5390,13 +5390,13 @@ msgid "Default Time Format"
 msgstr "Format de timp implicit"
 
 #: core/views/settings/general_setting_tab.php:194
-#: core/views/wizard/manage_wizard.php:54
+#: core/views/wizard/manage_wizard.php:52
 #@ bookingpress-appointment-booking
 msgid "12 hour Format"
 msgstr "Format 12 ore"
 
 #: core/views/settings/general_setting_tab.php:195
-#: core/views/wizard/manage_wizard.php:55
+#: core/views/wizard/manage_wizard.php:53
 #@ bookingpress-appointment-booking
 msgid "24 hour Format"
 msgstr "Format 24 de ore"
@@ -5417,7 +5417,7 @@ msgid "Load JS &amp; CSS in all pages"
 msgstr "Încărcați JS &amp; CSS în toate paginile"
 
 #: core/views/settings/general_setting_tab.php:225
-#: core/views/wizard/manage_wizard.php:112
+#: core/views/wizard/manage_wizard.php:110
 #@ bookingpress-appointment-booking
 msgid "Help us improve BookingPress by sending anonymous usage stats"
 msgstr "Ajutați-ne să îmbunătățim BookingPress trimițând statistici anonime de utilizare"
@@ -5653,7 +5653,7 @@ msgid "Currency Settings"
 msgstr "Setări valutare"
 
 #: core/views/settings/payment_setting_tab.php:35
-#: core/views/wizard/manage_wizard.php:250
+#: core/views/wizard/manage_wizard.php:248
 #@ bookingpress-appointment-booking
 msgid "Currency"
 msgstr "Valută"
@@ -5750,43 +5750,43 @@ msgid "Working Hours"
 msgstr "Ore de lucru"
 
 #: core/views/settings/workhours_setting_tab.php:29
-#: core/views/wizard/manage_wizard.php:145
+#: core/views/wizard/manage_wizard.php:143
 #@ bookingpress-appointment-booking
 msgid "Monday"
 msgstr "luni"
 
 #: core/views/settings/workhours_setting_tab.php:30
-#: core/views/wizard/manage_wizard.php:159
+#: core/views/wizard/manage_wizard.php:157
 #@ bookingpress-appointment-booking
 msgid "Tuesday"
 msgstr "marţi"
 
 #: core/views/settings/workhours_setting_tab.php:31
-#: core/views/wizard/manage_wizard.php:174
+#: core/views/wizard/manage_wizard.php:172
 #@ bookingpress-appointment-booking
 msgid "Wednesday"
 msgstr "miercuri"
 
 #: core/views/settings/workhours_setting_tab.php:32
-#: core/views/wizard/manage_wizard.php:189
+#: core/views/wizard/manage_wizard.php:187
 #@ bookingpress-appointment-booking
 msgid "Thursday"
 msgstr "joi"
 
 #: core/views/settings/workhours_setting_tab.php:33
-#: core/views/wizard/manage_wizard.php:204
+#: core/views/wizard/manage_wizard.php:202
 #@ bookingpress-appointment-booking
 msgid "Friday"
 msgstr "vineri"
 
 #: core/views/settings/workhours_setting_tab.php:34
-#: core/views/wizard/manage_wizard.php:219
+#: core/views/wizard/manage_wizard.php:217
 #@ bookingpress-appointment-booking
 msgid "Saturday"
 msgstr "sâmbătă"
 
 #: core/views/settings/workhours_setting_tab.php:35
-#: core/views/wizard/manage_wizard.php:234
+#: core/views/wizard/manage_wizard.php:232
 #@ bookingpress-appointment-booking
 msgid "Sunday"
 msgstr "duminică"
@@ -5824,220 +5824,220 @@ msgstr "Pauze"
 msgid "Edit Break"
 msgstr "Editează Pauza"
 
-#: core/views/wizard/manage_wizard.php:32
-#: core/views/wizard/manage_wizard.php:36
+#: core/views/wizard/manage_wizard.php:30
+#: core/views/wizard/manage_wizard.php:34
 #@ bookingpress-appointment-booking
 msgid "Your Site"
 msgstr "Site-ul tău"
 
-#: core/views/wizard/manage_wizard.php:37
+#: core/views/wizard/manage_wizard.php:35
 #@ bookingpress-appointment-booking
 msgid "Give some information about your company"
 msgstr "Oferă câteva informații despre compania ta"
 
-#: core/views/wizard/manage_wizard.php:42
+#: core/views/wizard/manage_wizard.php:40
 #@ bookingpress-appointment-booking
 msgid "Company Name"
 msgstr "Numele companiei"
 
-#: core/views/wizard/manage_wizard.php:43
+#: core/views/wizard/manage_wizard.php:41
 #@ bookingpress-appointment-booking
 msgid "Enter your company name"
 msgstr "Introduceți numele companiei dvs"
 
-#: core/views/wizard/manage_wizard.php:47
+#: core/views/wizard/manage_wizard.php:45
 #@ bookingpress-appointment-booking
 msgid "Enter your company address"
 msgstr "Introdu adresa companiei tale"
 
-#: core/views/wizard/manage_wizard.php:52
+#: core/views/wizard/manage_wizard.php:50
 #@ bookingpress-appointment-booking
 msgid "Time Format"
 msgstr "Format de timp"
 
-#: core/views/wizard/manage_wizard.php:53
+#: core/views/wizard/manage_wizard.php:51
 #@ bookingpress-appointment-booking
 msgid "Select Time Format"
 msgstr "Selectați Format oră"
 
-#: core/views/wizard/manage_wizard.php:59
+#: core/views/wizard/manage_wizard.php:57
 #@ bookingpress-appointment-booking
 msgid "Date Format"
 msgstr "Formatul datei"
 
-#: core/views/wizard/manage_wizard.php:60
+#: core/views/wizard/manage_wizard.php:58
 #@ bookingpress-appointment-booking
 msgid "Select date format"
 msgstr "Selectați formatul de dată"
 
-#: core/views/wizard/manage_wizard.php:72
+#: core/views/wizard/manage_wizard.php:70
 #@ bookingpress-appointment-booking
 msgid "Country"
 msgstr "Țară"
 
-#: core/views/wizard/manage_wizard.php:73
+#: core/views/wizard/manage_wizard.php:71
 #@ bookingpress-appointment-booking
 msgid "Select your country"
 msgstr "Alege-ti tara"
 
-#: core/views/wizard/manage_wizard.php:74
+#: core/views/wizard/manage_wizard.php:72
 #@ bookingpress-appointment-booking
 msgid "Identify country code by user's IP address"
 msgstr "Identificați codul țării după adresa IP a utilizatorului"
 
-#: core/views/wizard/manage_wizard.php:81
+#: core/views/wizard/manage_wizard.php:79
 #@ bookingpress-appointment-booking
 msgid "Phone No"
 msgstr "nr. de telefon"
 
-#: core/views/wizard/manage_wizard.php:82
+#: core/views/wizard/manage_wizard.php:80
 #@ bookingpress-appointment-booking
 msgid "Enter phone no"
 msgstr "Introdu numărul de telefon"
 
-#: core/views/wizard/manage_wizard.php:88
+#: core/views/wizard/manage_wizard.php:86
 #@ bookingpress-appointment-booking
 msgid "Enter your website url"
 msgstr "Introduceți adresa URL a site-ului dvs"
 
-#: core/views/wizard/manage_wizard.php:94
+#: core/views/wizard/manage_wizard.php:92
 #@ bookingpress-appointment-booking
 msgid "Company Logo"
 msgstr "Logoul companiei"
 
-#: core/views/wizard/manage_wizard.php:133
-#: core/views/wizard/manage_wizard.php:137
+#: core/views/wizard/manage_wizard.php:131
+#: core/views/wizard/manage_wizard.php:135
 #@ bookingpress-appointment-booking
 msgid "Booking Options"
 msgstr "Opțiuni de rezervare"
 
-#: core/views/wizard/manage_wizard.php:138
+#: core/views/wizard/manage_wizard.php:136
 #@ bookingpress-appointment-booking
 msgid "Help us understand your booking options"
 msgstr "Ajutați-ne să înțelegem opțiunile dvs. de rezervare"
 
-#: core/views/wizard/manage_wizard.php:142
+#: core/views/wizard/manage_wizard.php:140
 #@ bookingpress-appointment-booking
 msgid "Default working hours"
 msgstr "Program de lucru implicit"
 
-#: core/views/wizard/manage_wizard.php:251
+#: core/views/wizard/manage_wizard.php:249
 #@ bookingpress-appointment-booking
 msgid "Select Currency"
 msgstr "Selectați Moneda"
 
-#: core/views/wizard/manage_wizard.php:286
+#: core/views/wizard/manage_wizard.php:284
 #@ bookingpress-appointment-booking
 msgid "Service Options"
 msgstr "Opțiuni de service"
 
-#: core/views/wizard/manage_wizard.php:287
+#: core/views/wizard/manage_wizard.php:285
 #@ bookingpress-appointment-booking
 msgid "Add your services here with basic options or you can add them later too"
 msgstr "Adăugați-vă serviciile aici cu opțiuni de bază sau le puteți adăuga și mai târziu"
 
-#: core/views/wizard/manage_wizard.php:354
-#: core/views/wizard/manage_wizard.php:358
+#: core/views/wizard/manage_wizard.php:352
+#: core/views/wizard/manage_wizard.php:356
 #@ bookingpress-appointment-booking
 msgid "Styling"
 msgstr "Styling"
 
-#: core/views/wizard/manage_wizard.php:359
+#: core/views/wizard/manage_wizard.php:357
 #@ bookingpress-appointment-booking
 msgid "Almost there. Choose basic colors & fonts."
 msgstr "Aproape acolo. Alegeți culorile și fonturile de bază."
 
-#: core/views/wizard/manage_wizard.php:365
+#: core/views/wizard/manage_wizard.php:363
 #@ bookingpress-appointment-booking
 msgid "Font Selection"
 msgstr "Selectarea fontului"
 
-#: core/views/wizard/manage_wizard.php:368
+#: core/views/wizard/manage_wizard.php:366
 #@ bookingpress-appointment-booking
 msgid "Select Font"
 msgstr "Selectați Font"
 
-#: core/views/wizard/manage_wizard.php:379
+#: core/views/wizard/manage_wizard.php:377
 #@ bookingpress-appointment-booking
 msgid "Color Options"
 msgstr "Opțiuni de culoare"
 
-#: core/views/wizard/manage_wizard.php:383
+#: core/views/wizard/manage_wizard.php:381
 #@ bookingpress-appointment-booking
 msgid "Primary"
 msgstr "Primar"
 
-#: core/views/wizard/manage_wizard.php:393
+#: core/views/wizard/manage_wizard.php:391
 #@ bookingpress-appointment-booking
 msgid "Title"
 msgstr "Titlu"
 
-#: core/views/wizard/manage_wizard.php:403
+#: core/views/wizard/manage_wizard.php:401
 #@ bookingpress-appointment-booking
 msgid "Sub Title"
 msgstr "Subtitlu"
 
-#: core/views/wizard/manage_wizard.php:413
+#: core/views/wizard/manage_wizard.php:411
 #@ bookingpress-appointment-booking
 msgid "Content"
 msgstr "Conţinut"
 
-#: core/views/wizard/manage_wizard.php:430
+#: core/views/wizard/manage_wizard.php:428
 #@ bookingpress-appointment-booking
 msgid "Finish"
 msgstr "finalizarea"
 
-#: core/views/wizard/manage_wizard.php:442
+#: core/views/wizard/manage_wizard.php:440
 #@ bookingpress-appointment-booking
 msgid "Ready"
 msgstr "Gata"
 
-#: core/views/wizard/manage_wizard.php:480
+#: core/views/wizard/manage_wizard.php:478
 #@ bookingpress-appointment-booking
 msgid "Congratulations!"
 msgstr "Felicitări!"
 
-#: core/views/wizard/manage_wizard.php:481
+#: core/views/wizard/manage_wizard.php:479
 #@ bookingpress-appointment-booking
 msgid "Hurray!! Everything is ready to accept your first online booking now"
 msgstr "Ura!! Totul este gata pentru a accepta prima ta rezervare online acum"
 
-#: core/views/wizard/manage_wizard.php:485
+#: core/views/wizard/manage_wizard.php:483
 #@ bookingpress-appointment-booking
 msgid "Your site is ready & below are the details"
 msgstr "Site-ul dvs. este gata și mai jos sunt detaliile"
 
-#: core/views/wizard/manage_wizard.php:503
+#: core/views/wizard/manage_wizard.php:501
 #@ bookingpress-appointment-booking
 msgid "[bookingpress_form]"
 msgstr "[bookingpress_form]"
 
-#: core/views/wizard/manage_wizard.php:507
+#: core/views/wizard/manage_wizard.php:505
 #@ bookingpress-appointment-booking
 msgid "[bookingpress_my_appointments]"
 msgstr "[bookingpress_my_appointments]"
 
-#: core/views/wizard/manage_wizard.php:513
+#: core/views/wizard/manage_wizard.php:511
 #@ bookingpress-appointment-booking
 msgid "Useful Links"
 msgstr "Link-uri utile"
 
-#: core/views/wizard/manage_wizard.php:516
+#: core/views/wizard/manage_wizard.php:514
 #@ bookingpress-appointment-booking
 msgid "Documentation"
 msgstr "Documentație"
 
-#: core/views/wizard/manage_wizard.php:519
+#: core/views/wizard/manage_wizard.php:517
 #@ bookingpress-appointment-booking
 msgid "Get 24x7 Support"
 msgstr "Obțineți asistență 24x7"
 
-#: core/views/wizard/manage_wizard.php:522
+#: core/views/wizard/manage_wizard.php:520
 #@ bookingpress-appointment-booking
 msgid "Explore Features"
 msgstr "Explorați caracteristicile"
 
-#: core/views/wizard/manage_wizard.php:544
+#: core/views/wizard/manage_wizard.php:542
 #@ bookingpress-appointment-booking
 msgid "Close and Exit Wizard Without Saving"
 msgstr "Închideți și părăsiți expertul fără a salva"
@@ -6087,9 +6087,9 @@ msgid "Failed to save the file."
 msgstr "Nu s-a putut salva fișierul."
 
 #: core/classes/class.bookingpress_import_export.php:420
-#: core/classes/class.bookingpress_import_export.php:1517
-#: core/classes/class.bookingpress_import_export.php:1751
-#: core/classes/class.bookingpress_import_export.php:1798
+#: core/classes/class.bookingpress_import_export.php:1522
+#: core/classes/class.bookingpress_import_export.php:1756
+#: core/classes/class.bookingpress_import_export.php:1803
 #@ bookingpress-appointment-booking
 msgid "Sorry, Something Wrong."
 msgstr "Îmi pare rău, ceva în neregulă."
@@ -6098,12 +6098,12 @@ msgstr "Îmi pare rău, ceva în neregulă."
 #: core/classes/class.bookingpress_import_export.php:877
 #: core/classes/class.bookingpress_import_export.php:995
 #: core/classes/class.bookingpress_import_export.php:1056
-#: core/classes/class.bookingpress_import_export.php:1129
-#: core/classes/class.bookingpress_import_export.php:1193
-#: core/classes/class.bookingpress_import_export.php:1243
-#: core/classes/class.bookingpress_import_export.php:1287
-#: core/classes/class.bookingpress_import_export.php:1325
-#: core/classes/class.bookingpress_import_export.php:1342
+#: core/classes/class.bookingpress_import_export.php:1134
+#: core/classes/class.bookingpress_import_export.php:1198
+#: core/classes/class.bookingpress_import_export.php:1248
+#: core/classes/class.bookingpress_import_export.php:1292
+#: core/classes/class.bookingpress_import_export.php:1330
+#: core/classes/class.bookingpress_import_export.php:1347
 #@ bookingpress-appointment-booking
 msgid "Table Not Exists."
 msgstr "Tabelul nu există."
@@ -6113,318 +6113,318 @@ msgstr "Tabelul nu există."
 msgid "All image data imported."
 msgstr "Toate datele de imagine au fost importate."
 
-#: core/classes/class.bookingpress_import_export.php:1378
-#: core/classes/class.bookingpress_import_export.php:1429
+#: core/classes/class.bookingpress_import_export.php:1383
+#: core/classes/class.bookingpress_import_export.php:1434
 #@ bookingpress-appointment-booking
 msgid "No Record Found."
 msgstr "Nicio inregistrare gasita."
 
-#: core/classes/class.bookingpress_import_export.php:1477
+#: core/classes/class.bookingpress_import_export.php:1482
 #@ bookingpress-appointment-booking
 msgid "Import process completed successfully."
 msgstr "Procesul de import a fost finalizat cu succes."
 
-#: core/classes/class.bookingpress_import_export.php:1542
+#: core/classes/class.bookingpress_import_export.php:1547
 #@ bookingpress-appointment-booking
 msgid "Sorry, Your request can not be processed your added data not valid."
 msgstr "Ne pare rău, cererea dvs. nu poate fi procesată. Datele adăugate nu sunt valide."
 
-#: core/classes/class.bookingpress_import_export.php:1572
+#: core/classes/class.bookingpress_import_export.php:1577
 #, php-format
 #@ bookingpress-appointment-booking
 msgid "Sorry, Please activate %s addon to continue importing."
 msgstr "Ne pare rău, vă rugăm să activați suplimentul %s pentru a continua importul."
 
-#: core/classes/class.bookingpress_import_export.php:1574
+#: core/classes/class.bookingpress_import_export.php:1579
 #, php-format
 #@ bookingpress-appointment-booking
 msgid "Sorry, Please activate %s addons to continue importing"
 msgstr "Ne pare rău, vă rugăm să activați %s suplimente pentru a continua importul"
 
-#: core/classes/class.bookingpress_import_export.php:1588
+#: core/classes/class.bookingpress_import_export.php:1593
 #@ bookingpress-appointment-booking
 msgid "Sorry, Please activate all addons or modules that are active on the export website."
 msgstr "Ne pare rău, vă rugăm să activați toate suplimentele sau modulele care sunt active pe site-ul de export."
 
-#: core/classes/class.bookingpress_import_export.php:1614
+#: core/classes/class.bookingpress_import_export.php:1619
 #@ bookingpress-appointment-booking
 msgid "Sorry, Import data not found."
 msgstr "Ne pare rău, date de import nu au fost găsite."
 
-#: core/classes/class.bookingpress_import_export.php:1623
+#: core/classes/class.bookingpress_import_export.php:1628
 #@ bookingpress-appointment-booking
 msgid "Custom Fields, Notification"
 msgstr "Câmpuri personalizate, notificare"
 
-#: core/classes/class.bookingpress_import_export.php:1627
-#: core/classes/class.bookingpress_import_export.php:1629
+#: core/classes/class.bookingpress_import_export.php:1632
+#: core/classes/class.bookingpress_import_export.php:1634
 #@ bookingpress-appointment-booking
 msgid "Appointments, Payment Transaction"
 msgstr "Programări, Tranzacție de plată"
 
-#: core/classes/class.bookingpress_import_export.php:1634
-#: core/classes/class.bookingpress_import_export.php:1636
-#: core/classes/class.bookingpress_import_export.php:3154
+#: core/classes/class.bookingpress_import_export.php:1639
+#: core/classes/class.bookingpress_import_export.php:1641
+#: core/classes/class.bookingpress_import_export.php:3159
 #@ bookingpress-appointment-booking
 msgid "Package Order"
 msgstr "Comanda pachet"
 
-#: core/classes/class.bookingpress_import_export.php:1727
-#: core/classes/class.bookingpress_import_export.php:2085
+#: core/classes/class.bookingpress_import_export.php:1732
+#: core/classes/class.bookingpress_import_export.php:2090
 #@ bookingpress-appointment-booking
 msgid "Export process completed successfully."
 msgstr "Procesul de export s-a încheiat cu succes."
 
-#: core/classes/class.bookingpress_import_export.php:2067
+#: core/classes/class.bookingpress_import_export.php:2072
 #@ bookingpress-appointment-booking
 msgid "Export process successfully completed."
 msgstr "Procesul de export a fost finalizat cu succes."
 
-#: core/classes/class.bookingpress_import_export.php:2430
+#: core/classes/class.bookingpress_import_export.php:2435
 #@ bookingpress-appointment-booking
 msgid "Please select export list items."
 msgstr "Vă rugăm să selectați exportați elementele din listă."
 
-#: core/classes/class.bookingpress_import_export.php:2603
+#: core/classes/class.bookingpress_import_export.php:2608
 #@ bookingpress-appointment-booking
 msgid "Export process successfully completed"
 msgstr "Procesul de export a fost finalizat cu succes"
 
-#: core/classes/class.bookingpress_import_export.php:2646
+#: core/classes/class.bookingpress_import_export.php:2651
 #@ bookingpress-appointment-booking
 msgid "WordPress Users"
 msgstr "Utilizatori WordPress"
 
-#: core/classes/class.bookingpress_import_export.php:2708
-#: core/classes/class.bookingpress_import_export.php:2711
+#: core/classes/class.bookingpress_import_export.php:2713
+#: core/classes/class.bookingpress_import_export.php:2716
 #: core/views/importexport/import_export_tab.php:17
 #@ bookingpress-appointment-booking
 msgid "Import/Export"
 msgstr "Import Export"
 
-#: core/classes/class.bookingpress_import_export.php:2958
+#: core/classes/class.bookingpress_import_export.php:2963
 #@ bookingpress-appointment-booking
 msgid "Export Logs"
 msgstr "Exportă jurnalele"
 
-#: core/classes/class.bookingpress_import_export.php:3005
-#: core/classes/class.bookingpress_import_export.php:3076
+#: core/classes/class.bookingpress_import_export.php:3010
+#: core/classes/class.bookingpress_import_export.php:3081
 #@ bookingpress-appointment-booking
 msgid "Download Log"
 msgstr "Descărcați jurnalul"
 
-#: core/classes/class.bookingpress_import_export.php:3017
-#: core/classes/class.bookingpress_import_export.php:3088
+#: core/classes/class.bookingpress_import_export.php:3022
+#: core/classes/class.bookingpress_import_export.php:3093
 #@ bookingpress-appointment-booking
 msgid "Clear Log"
 msgstr "Curăță Jurnalul"
 
-#: core/classes/class.bookingpress_import_export.php:3029
+#: core/classes/class.bookingpress_import_export.php:3034
 #@ bookingpress-appointment-booking
 msgid "Import Logs"
 msgstr "Importați jurnalele"
 
-#: core/classes/class.bookingpress_import_export.php:3107
+#: core/classes/class.bookingpress_import_export.php:3112
 #@ bookingpress-appointment-booking
 msgid "Settings Working Hours"
 msgstr "Setări Orar de lucru"
 
-#: core/classes/class.bookingpress_import_export.php:3108
+#: core/classes/class.bookingpress_import_export.php:3113
 #@ bookingpress-appointment-booking
 msgid "Settings Special days"
 msgstr "Setări Zile speciale"
 
-#: core/classes/class.bookingpress_import_export.php:3109
+#: core/classes/class.bookingpress_import_export.php:3114
 #@ bookingpress-appointment-booking
 msgid "Settings Special days break"
 msgstr "Setări Pauză de zile speciale"
 
-#: core/classes/class.bookingpress_import_export.php:3110
+#: core/classes/class.bookingpress_import_export.php:3115
 #@ bookingpress-appointment-booking
 msgid "Settings Holidays"
 msgstr "Setări Sărbători"
 
-#: core/classes/class.bookingpress_import_export.php:3115
+#: core/classes/class.bookingpress_import_export.php:3120
 #@ bookingpress-appointment-booking
 msgid "Customers WordPress Users"
 msgstr "Clienți Utilizatori WordPress"
 
-#: core/classes/class.bookingpress_import_export.php:3117
+#: core/classes/class.bookingpress_import_export.php:3122
 #@ bookingpress-appointment-booking
 msgid "Categories"
 msgstr "Categorii"
 
-#: core/classes/class.bookingpress_import_export.php:3119
+#: core/classes/class.bookingpress_import_export.php:3124
 #@ bookingpress-appointment-booking
 msgid "Service Meta"
 msgstr "Service Meta"
 
-#: core/classes/class.bookingpress_import_export.php:3120
+#: core/classes/class.bookingpress_import_export.php:3125
 #@ bookingpress-appointment-booking
 msgid "Service Working Hours"
 msgstr "Program de lucru al serviciului"
 
-#: core/classes/class.bookingpress_import_export.php:3121
+#: core/classes/class.bookingpress_import_export.php:3126
 #@ bookingpress-appointment-booking
 msgid "Service Holidays"
 msgstr "Sărbători de serviciu"
 
-#: core/classes/class.bookingpress_import_export.php:3122
+#: core/classes/class.bookingpress_import_export.php:3127
 #@ bookingpress-appointment-booking
 msgid "Service Special days"
 msgstr "Service zile speciale"
 
-#: core/classes/class.bookingpress_import_export.php:3123
+#: core/classes/class.bookingpress_import_export.php:3128
 #@ bookingpress-appointment-booking
 msgid "Service Special days break"
 msgstr "Service Pauza de zile speciale"
 
-#: core/classes/class.bookingpress_import_export.php:3124
+#: core/classes/class.bookingpress_import_export.php:3129
 #@ bookingpress-appointment-booking
 msgid "Service Extra"
 msgstr "Serviciu suplimentar"
 
-#: core/classes/class.bookingpress_import_export.php:3125
+#: core/classes/class.bookingpress_import_export.php:3130
 #@ bookingpress-appointment-booking
 msgid "Happy Hours"
 msgstr "Ore fericite"
 
-#: core/classes/class.bookingpress_import_export.php:3126
+#: core/classes/class.bookingpress_import_export.php:3131
 #@ bookingpress-appointment-booking
 msgid "Custom Service Durations"
 msgstr "Durata serviciului personalizat"
 
-#: core/classes/class.bookingpress_import_export.php:3127
+#: core/classes/class.bookingpress_import_export.php:3132
 #@ bookingpress-appointment-booking
 msgid "Advanced Discount"
 msgstr "Reducere avansată"
 
-#: core/classes/class.bookingpress_import_export.php:3128
+#: core/classes/class.bookingpress_import_export.php:3133
 #@ bookingpress-appointment-booking
 msgid "Coupon"
 msgstr "Cupon"
 
-#: core/classes/class.bookingpress_import_export.php:3130
+#: core/classes/class.bookingpress_import_export.php:3135
 #@ bookingpress-appointment-booking
 msgid "Staff Members"
 msgstr "Membrii personalului"
 
-#: core/classes/class.bookingpress_import_export.php:3131
+#: core/classes/class.bookingpress_import_export.php:3136
 #@ bookingpress-appointment-booking
 msgid "Staff Members Service"
 msgstr "Serviciul Membrilor Personalului"
 
-#: core/classes/class.bookingpress_import_export.php:3132
+#: core/classes/class.bookingpress_import_export.php:3137
 #@ bookingpress-appointment-booking
 msgid "Staff Members Working Hours"
 msgstr "Programul de lucru al membrilor personalului"
 
-#: core/classes/class.bookingpress_import_export.php:3133
+#: core/classes/class.bookingpress_import_export.php:3138
 #@ bookingpress-appointment-booking
 msgid "Staff Members Special days"
 msgstr "Membrii personalului Zile speciale"
 
-#: core/classes/class.bookingpress_import_export.php:3134
+#: core/classes/class.bookingpress_import_export.php:3139
 #@ bookingpress-appointment-booking
 msgid "Staff Members Special days break"
 msgstr "Membrii personalului Pauza de zile speciale"
 
-#: core/classes/class.bookingpress_import_export.php:3135
+#: core/classes/class.bookingpress_import_export.php:3140
 #@ bookingpress-appointment-booking
 msgid "Staff Members days off"
 msgstr "Zile libere pentru membrii personalului"
 
-#: core/classes/class.bookingpress_import_export.php:3136
+#: core/classes/class.bookingpress_import_export.php:3141
 #@ bookingpress-appointment-booking
 msgid "Staff Members Meta"
 msgstr "Membrii personalului Meta"
 
-#: core/classes/class.bookingpress_import_export.php:3137
+#: core/classes/class.bookingpress_import_export.php:3142
 #@ bookingpress-appointment-booking
 msgid "Staff Members Custom Service Durations"
 msgstr "Membrii personalului Durata serviciului personalizat"
 
-#: core/classes/class.bookingpress_import_export.php:3139
+#: core/classes/class.bookingpress_import_export.php:3144
 #@ bookingpress-appointment-booking
 msgid "Location"
 msgstr "Locație"
 
-#: core/classes/class.bookingpress_import_export.php:3140
+#: core/classes/class.bookingpress_import_export.php:3145
 #@ bookingpress-appointment-booking
 msgid "Location Services Special days"
 msgstr "Servicii de localizare Zile speciale"
 
-#: core/classes/class.bookingpress_import_export.php:3141
+#: core/classes/class.bookingpress_import_export.php:3146
 #@ bookingpress-appointment-booking
 msgid "Location Staff & Service Pricing"
 msgstr "Locație Personalul și prețurile serviciilor"
 
-#: core/classes/class.bookingpress_import_export.php:3142
+#: core/classes/class.bookingpress_import_export.php:3147
 #@ bookingpress-appointment-booking
 msgid "Location Service Working Hours"
 msgstr "Programul de lucru al serviciului de locație"
 
-#: core/classes/class.bookingpress_import_export.php:3143
+#: core/classes/class.bookingpress_import_export.php:3148
 #@ bookingpress-appointment-booking
 msgid "Location Staff Members Special days"
 msgstr "Locație Membrii personalului Zile speciale"
 
-#: core/classes/class.bookingpress_import_export.php:3144
+#: core/classes/class.bookingpress_import_export.php:3149
 #@ bookingpress-appointment-booking
 msgid "Location Staff Members Working Hours"
 msgstr "Locație Membrii personalului Program de lucru"
 
-#: core/classes/class.bookingpress_import_export.php:3145
+#: core/classes/class.bookingpress_import_export.php:3150
 #@ bookingpress-appointment-booking
 msgid "Packages"
 msgstr "Pachete"
 
-#: core/classes/class.bookingpress_import_export.php:3146
+#: core/classes/class.bookingpress_import_export.php:3151
 #@ bookingpress-appointment-booking
 msgid "Package Services"
 msgstr "Servicii de pachete"
 
-#: core/classes/class.bookingpress_import_export.php:3147
+#: core/classes/class.bookingpress_import_export.php:3152
 #@ bookingpress-appointment-booking
 msgid "Package Image"
 msgstr "Imaginea pachetului"
 
-#: core/classes/class.bookingpress_import_export.php:3148
+#: core/classes/class.bookingpress_import_export.php:3153
 #@ bookingpress-appointment-booking
 msgid "Custom Fields"
 msgstr "câmpuri customizate"
 
-#: core/classes/class.bookingpress_import_export.php:3150
+#: core/classes/class.bookingpress_import_export.php:3155
 #@ bookingpress-appointment-booking
 msgid "Multi-Language Data"
 msgstr "Date în mai multe limbi"
 
-#: core/classes/class.bookingpress_import_export.php:3151
+#: core/classes/class.bookingpress_import_export.php:3156
 #@ bookingpress-appointment-booking
 msgid "BookingPress option data"
 msgstr "Datele opțiunii BookingPress"
 
-#: core/classes/class.bookingpress_import_export.php:3156
+#: core/classes/class.bookingpress_import_export.php:3161
 #@ bookingpress-appointment-booking
 msgid "Guests Data"
 msgstr "Datele oaspeților"
 
-#: core/classes/class.bookingpress_import_export.php:3157
+#: core/classes/class.bookingpress_import_export.php:3162
 #@ bookingpress-appointment-booking
 msgid "Images Import"
 msgstr "Import de imagini"
 
-#: core/classes/class.bookingpress_import_export.php:3249
+#: core/classes/class.bookingpress_import_export.php:3254
 #@ bookingpress-appointment-booking
 msgid "The export process has been successfully completed. Please click on the 'Download File' button below to retrieve your export file."
 msgstr "Procesul de export a fost finalizat cu succes. Vă rugăm să faceți clic pe butonul „Descărcați fișierul” de mai jos pentru a prelua fișierul de export."
 
-#: core/classes/class.bookingpress_import_export.php:3345
+#: core/classes/class.bookingpress_import_export.php:3350
 #@ bookingpress-appointment-booking
 msgid "Continue"
 msgstr "Continua"
 
-#: core/classes/class.bookingpress_import_export.php:3537
+#: core/classes/class.bookingpress_import_export.php:3542
 #@ bookingpress-appointment-booking
 msgid "BookingPress Pro"
 msgstr "BookingPress Pro"
@@ -6481,9 +6481,9 @@ msgstr "Importați datele fișierului"
 msgid "Copy and paste the exported file content"
 msgstr "Copiați și inserați conținutul fișierului exportat"
 
-#: core/classes/class.bookingpress_import_export.php:2952
-#: core/classes/class.bookingpress_import_export.php:2970
-#: core/classes/class.bookingpress_import_export.php:3041
+#: core/classes/class.bookingpress_import_export.php:2957
+#: core/classes/class.bookingpress_import_export.php:2975
+#: core/classes/class.bookingpress_import_export.php:3046
 #@ bookingpress-appointment-booking
 msgid "Import/Export Debug Logs"
 msgstr "Importați/Exportați jurnalele de depanare"
@@ -6676,7 +6676,7 @@ msgstr "Se pare că folosești"
 msgid "caching plugin. So, do not forget to clear your website cache after doing any changes in customization or field settings section."
 msgstr "plugin pentru cache. Deci, nu uitați să ștergeți memoria cache a site-ului dvs. după ce faceți orice modificări în secțiunea de personalizare sau setări de câmp."
 
-#: core/classes/class.bookingpress_import_export.php:1644
+#: core/classes/class.bookingpress_import_export.php:1649
 #@ bookingpress-appointment-booking
 msgid "Import process will be removing existing data associated with"
 msgstr "Procesul de import va elimina datele existente asociate cu"
@@ -6846,12 +6846,6 @@ msgstr "Permite anularea întâlnirii"
 msgid "Booking & Appointment - Repute Infosystems"
 msgstr "Booking & Appointment - Repute Infosystems"
 
-#. translators: plugin header field 'Version'
-#: bookingpress-appointment-booking.php:0
-#@ bookingpress-appointment-booking
-msgid "1.1.20"
-msgstr "1.1.20"
-
 #: core/classes/class.bookingpress.php:4535
 #@ bookingpress-appointment-booking
 msgid "Black Friday Sale 🔥"
@@ -6861,4 +6855,10 @@ msgstr "Reducere de Vinerea Neagră 🔥"
 #@ bookingpress-appointment-booking
 msgid "Black Friday Sale"
 msgstr "Reducere de Vinerea Neagră"
+
+#. translators: plugin header field 'Version'
+#: bookingpress-appointment-booking.php:0
+#@ bookingpress-appointment-booking
+msgid "1.1.21"
+msgstr "1.1.21"
 

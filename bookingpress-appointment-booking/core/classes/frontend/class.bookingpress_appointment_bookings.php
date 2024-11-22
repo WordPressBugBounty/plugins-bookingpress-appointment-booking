@@ -7119,6 +7119,9 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             $bookingpress_after_selecting_booking_service_data = '';
             $bookingpress_after_selecting_booking_service_data = apply_filters('bookingpress_after_selecting_booking_service', $bookingpress_after_selecting_booking_service_data);
 
+            $bookingpress_after_selecting_booking_service_data_updated = '';
+            $bookingpress_after_selecting_booking_service_data_updated = apply_filters('bookingpress_after_selecting_booking_service_updated', $bookingpress_after_selecting_booking_service_data_updated);
+            
             $bookingpress_after_timeslot_data_load_for_single_date = '';
             $bookingpress_after_timeslot_data_load_for_single_date = apply_filters('bookingpress_after_timeslot_data_load_for_single_date', $bookingpress_after_timeslot_data_load_for_single_date);
 
@@ -7678,11 +7681,15 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                 if( "d" != vm.appointment_step_form_data.selected_service_duration_unit && vm.current_screen_size != "desktop"){
                     vm.displayResponsiveCalendar = "0";
                 }
+                
                 setTimeout(function(){
                     vm.service_timing = vm.bookingpress_categories_timeslots( vm.v_calendar_timeslots_data[ dayId ] );
                     vm.appointment_step_form_data.selected_start_time = "";
                     vm.appointment_step_form_data.selected_end_time = "";
+                    
+                    ' . $bookingpress_after_selecting_booking_service_data_updated . '
                 },10);
+
             },
             dayClicked_legacy(day) {
                 const vm = this;

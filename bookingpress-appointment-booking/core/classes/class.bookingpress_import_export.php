@@ -1078,7 +1078,12 @@ if (! class_exists('bookingpress_import_export') ) {
                                             foreach($import_record_data[$i] as $key=>$value){
                                                 if(in_array($key,$get_all_table_columns)){
                                                     $import_data_v = $import_record_data[$i][$key];
-                                                    $import_data_v = $this->bookingpress_import_value_modified($import_data_v,$detail_import_detail_type,$key);
+                                                    if( 'bookingpress_field_values' == $key ){
+                                                        $import_data_v = stripslashes_deep($import_data_v);
+                                                    } else {
+                                                        $import_data_v = $this->bookingpress_import_value_modified($import_data_v,$detail_import_detail_type,$key);
+                                                    }
+
                                                     if($import_data_v == 'null' || is_null($import_data_v)){
                                                         $single_import_record[$key] = NULL;    
                                                     }else{
