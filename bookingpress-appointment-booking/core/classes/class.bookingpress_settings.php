@@ -1626,6 +1626,7 @@ if (! class_exists('bookingpress_settings') ) {
                     });
                     vm.workhours_timings = response.data.selected_workhours
                     vm.default_break_timings = response.data.default_break_times
+                    <?php do_action( 'bookingpress_after_fetch_default_work_hours' ); ?>
                 }).catch(function(error){
                     console.log(error);
                     vm.$notify({
@@ -2283,6 +2284,7 @@ if (! class_exists('bookingpress_settings') ) {
                         });
                         vm.workhours_timings = response.data.selected_workhours
                         vm.default_break_timings = response.data.default_break_times
+                        <?php do_action( 'bookingpress_after_fetch_default_work_hours' ); ?>
                     }).catch(function(error){
                         console.log(error);
                         vm.$notify({
@@ -2341,7 +2343,7 @@ if (! class_exists('bookingpress_settings') ) {
                                 customClass: 'error_notification',
                                 duration:<?php echo intval($bookingpress_notification_duration); ?>,
                             });
-                        } else if(vm.selected_break_timings[vm.break_selected_day] != '' ) {                            
+                        } else if(vm.selected_break_timings[vm.break_selected_day] != '' ) {
                             vm.selected_break_timings[vm.break_selected_day].forEach(function(currentValue, index, arr) {
                                 if(is_edit == 0) {
                                     if(vm.workhours_timings[vm.break_selected_day].start_time > vm.break_timings.start_time || vm.workhours_timings[vm.break_selected_day].end_time < vm.break_timings.end_time) {    
@@ -2376,13 +2378,15 @@ if (! class_exists('bookingpress_settings') ) {
                                 }    
                             });
                             if(is_edit == 0) {
-                                var formatted_start_time = formatted_end_time = '';                                 
+                                var formatted_start_time = formatted_end_time = start_time_string = end_time_string = '';
                                 vm.default_break_timings.forEach(function(currentValue, index, arr) {
-                                    if(currentValue.start_time == vm.break_timings.start_time) {
+                                    if(currentValue.start_time_val == vm.break_timings.start_time) {
                                         formatted_start_time = currentValue.formatted_start_time;
+                                        start_time_string = currentValue.formatted_start_time;
                                     }
-                                    if(currentValue.end_time == vm.break_timings.end_time) {
+                                    if(currentValue.end_time_val == vm.break_timings.end_time) {
                                         formatted_end_time = currentValue.formatted_end_time;
+                                        end_time_string = currentValue.formatted_end_time;
                                     }
                                 });
                                 if(vm.break_selected_day != '' && vm.is_edit_break != 0) {
@@ -2395,7 +2399,7 @@ if (! class_exists('bookingpress_settings') ) {
                                         }
                                     });   
                                 }else {
-                                    vm.selected_break_timings[vm.break_selected_day].push({ start_time: vm.break_timings.start_time, end_time: vm.break_timings.end_time,formatted_start_time:formatted_start_time,formatted_end_time:formatted_end_time });                                    
+                                    vm.selected_break_timings[vm.break_selected_day].push({ start_time: vm.break_timings.start_time, end_time: vm.break_timings.end_time,formatted_start_time:formatted_start_time,formatted_end_time:formatted_end_time, start_time_string: start_time_string, end_time_string: end_time_string });                                    
                                 }
                                 vm.close_add_break_model()
                             } 
@@ -2409,16 +2413,18 @@ if (! class_exists('bookingpress_settings') ) {
                                     duration:<?php echo intval($bookingpress_notification_duration); ?>,
                                 });                
                             }else{
-                                var formatted_start_time = formatted_end_time = '';									
+                                var formatted_start_time = formatted_end_time = start_time_string = end_time_string = '';
                                 vm.default_break_timings.forEach(function(currentValue, index, arr) {
-                                    if(currentValue.start_time == vm.break_timings.start_time) {
+                                    if(currentValue.start_time_val == vm.break_timings.start_time) {
                                         formatted_start_time = currentValue.formatted_start_time;
+                                        start_time_string = currentValue.formatted_start_time;                                        
                                     }
-                                    if(currentValue.end_time == vm.break_timings.end_time) {
+                                    if(currentValue.end_time_val == vm.break_timings.end_time) {
                                         formatted_end_time = currentValue.formatted_end_time;
+                                        end_time_string = currentValue.formatted_end_time;
                                     }
-                                });        
-                                vm.selected_break_timings[vm.break_selected_day].push({ start_time: vm.break_timings.start_time, end_time: vm.break_timings.end_time,formatted_start_time:formatted_start_time,formatted_end_time:formatted_end_time });
+                                });
+                                vm.selected_break_timings[vm.break_selected_day].push({ start_time: vm.break_timings.start_time, end_time: vm.break_timings.end_time,formatted_start_time:formatted_start_time,formatted_end_time:formatted_end_time, start_time_string: start_time_string, end_time_string: end_time_string });
                                 vm.close_add_break_model();
                             }
                         }
@@ -2952,8 +2958,10 @@ if (! class_exists('bookingpress_settings') ) {
 
 				$default_break_timings[] = array(
 					'start_time'           => $curr_time,
+					'start_time_val'           => $curr_time,
 					'formatted_start_time' => date( $bookingpress_options['wp_default_time_format'], strtotime( $curr_time ) ),
 					'end_time'             => $end_time,
+					'end_time_val'             => $end_time,
 					'formatted_end_time' => date($bookingpress_options['wp_default_time_format'], strtotime($end_time))." ".($end_time == "24:00:00" ? esc_html__('Next Day', 'bookingpress-appointment-booking') : '' ),
 					
 				);
@@ -3473,8 +3481,10 @@ if (! class_exists('bookingpress_settings') ) {
                 //if (! $bookingpress_check_break_time_exist ) {
                     $default_break_timings[] = array(
                     'start_time' => $curr_time,
+                    'start_time_val' => $curr_time,
 					'formatted_start_time' => date($break_global_data['wp_default_time_format'],strtotime($curr_time)),
                     'end_time'   => $end_time,
+                    'end_time_val'   => $end_time,
 					'formatted_end_time' => date($break_global_data['wp_default_time_format'],strtotime($end_time)).' '.($end_time == "24:00:00" ? esc_html__('Next Day', 'bookingpress-appointment-booking') : ''),
                     );
                // }

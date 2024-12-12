@@ -1007,7 +1007,7 @@ if (! class_exists('bookingpress_email_notifications') ) {
          * @param  mixed $bookingpress_customer_email
          * @return void
          */
-        function bookingpress_send_after_payment_log_entry_email_notification( $email_notification_type, $inserted_booking_id, $bookingpress_customer_email )
+        function bookingpress_send_after_payment_log_entry_email_notification( $email_notification_type, $inserted_booking_id, $bookingpress_customer_email, $is_send_to_customer = true )
         {
             global $wpdb, $BookingPress, $bookingpress_email_notifications, $bookingpress_other_debug_log_id;
 
@@ -1027,8 +1027,10 @@ if (! class_exists('bookingpress_email_notifications') ) {
                     }
                 }
                 else {
-                    foreach ($customer_email_notification_type_arr as $key => $email_notification_name) {
-                        $is_email_sent = $bookingpress_email_notifications->bookingpress_send_email_notification('customer', $email_notification_name, $inserted_booking_id, $bookingpress_customer_email);
+                    if($is_send_to_customer == true){
+                        foreach ($customer_email_notification_type_arr as $key => $email_notification_name) {
+                            $is_email_sent = $bookingpress_email_notifications->bookingpress_send_email_notification('customer', $email_notification_name, $inserted_booking_id, $bookingpress_customer_email);
+                        }
                     }
                 }
 

@@ -213,11 +213,10 @@ if (! class_exists('BookingPress') ) {
                     $transient_flag = true;
                 }
 
-                if( false == $transient_flag && !empty( $_REQUEST['is_rescheduling_event'] ) && 'true' == $_REQUEST['is_rescheduling_event'] ){
+                if( false == $transient_flag && !empty( $_REQUEST['is_rescheduling_event'] ) && ('true' == $_REQUEST['is_rescheduling_event'] || true === $_REQUEST['is_rescheduling_event']) ){
                     $transient_flag = true;
                 }
             }
-
 
             return $transient_flag;
         }
@@ -2015,7 +2014,7 @@ if (! class_exists('BookingPress') ) {
         {
             global $bookingpress_version;
             $bookingpress_old_version = get_option('bookingpress_version', true);
-            if (version_compare($bookingpress_old_version, '1.1.21', '<') ) {
+            if (version_compare($bookingpress_old_version, '1.1.22', '<') ) {
                 $bookingpress_load_upgrade_file = BOOKINGPRESS_VIEWS_DIR . '/upgrade_latest_data.php';
                 include $bookingpress_load_upgrade_file;
                 $this->bookingpress_send_anonymous_data_cron();
@@ -2861,7 +2860,7 @@ if (! class_exists('BookingPress') ) {
                                             var date = new Date();
                                             
                                             date.setDate(date.getDate()-1);
-                                            
+                                              
                                             var disable_past_date = Time.getTime() < date.getTime();
 
                                             if( disableDates_formatted.indexOf( currentDate ) > -1 ){
@@ -4003,6 +4002,7 @@ if (! class_exists('BookingPress') ) {
 					`bookingpress_service_duration_val` INT(11) NOT NULL,
 					`bookingpress_service_duration_unit` VARCHAR(1) NOT NULL,
 					`bookingpress_appointment_date` DATE NOT NULL,
+					`bookingpress_appointment_end_date` DATE NOT NULL,
 					`bookingpress_appointment_time` TIME NOT NULL,
                     `bookingpress_appointment_end_time` TIME NOT NULL,
 					`bookingpress_appointment_internal_note` TEXT DEFAULT NULL,
@@ -4041,6 +4041,7 @@ if (! class_exists('BookingPress') ) {
 					`bookingpress_service_duration_val` INT(11) NOT NULL,
 					`bookingpress_service_duration_unit` VARCHAR(1) NOT NULL,
 					`bookingpress_appointment_date` DATE NOT NULL,
+					`bookingpress_appointment_end_date` DATE NOT NULL,
 					`bookingpress_appointment_start_time` TIME NOT NULL,
 					`bookingpress_appointment_end_time` TIME NOT NULL,
 					`bookingpress_payment_gateway` varchar(255) DEFAULT NULL,
@@ -4080,11 +4081,12 @@ if (! class_exists('BookingPress') ) {
 					`bookingpress_service_duration_unit` VARCHAR(1) NOT NULL,
 					`bookingpress_payment_gateway` VARCHAR(255) DEFAULT NULL,
 					`bookingpress_appointment_date` DATE NOT NULL,
+                    `bookingpress_appointment_end_date` DATE NOT NULL,
 					`bookingpress_appointment_time` TIME NOT NULL,
                     `bookingpress_appointment_end_time` TIME NOT NULL,
 					`bookingpress_appointment_internal_note` TEXT DEFAULT NULL,
 					`bookingpress_appointment_send_notifications` TINYINT(1) DEFAULT 0,
-					`bookingpress_appointment_status` varchar(20) NOT NULL,	
+					`bookingpress_appointment_status` varchar(20) NOT NULL,
                     `bookingpress_paid_amount` float DEFAULT 0,
                     `bookingpress_due_amount` float DEFAULT 0,
                     `bookingpress_selected_appointment_date` DATE NOT NULL,
@@ -6198,7 +6200,7 @@ if (! class_exists('BookingPress') ) {
                     $startDateTime = new DateTime( $selected_date .' '.$service_start_time, new DateTimeZone( wp_timezone_string() ) );
                     $endDateTime = new DateTime( $selected_date .' '.$service_end_time, new DateTimeZone( wp_timezone_string() ) );
 
-                    
+                    $tc = 0;
                     while( $startDateTime <= $endDateTime ){
                         
                         $slotStart = $startDateTime;
@@ -6268,8 +6270,10 @@ if (! class_exists('BookingPress') ) {
                                     'break_start_time' => !empty( $break_start_time ) ? $break_start_time->format('H:i:s') : '',
                                     'break_end_time' => !empty( $break_end_time ) ? $break_end_time->format('H:i:s') : '',
                                     'store_service_date' => $selected_date,
+                                    'is_next_day' => false,
                                     'is_booked'  => 0,
                                     'max_capacity' => $service_max_capacity,
+                                    'counter_pos' => $tc,
                                     'total_booked' => 0
                                 );
                                 $workhour_data[] = $service_timing_arr;
@@ -6277,6 +6281,7 @@ if (! class_exists('BookingPress') ) {
                         }
                     
                         $startDateTime->add( $interval );
+                        $tc++;
                     }
                     $service_timings = $workhour_data;
                 }

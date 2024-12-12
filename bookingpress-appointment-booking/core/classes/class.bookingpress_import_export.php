@@ -45,10 +45,64 @@ if (! class_exists('bookingpress_import_export') ) {
             add_action("wp_ajax_bookingpress_import_data_process", array($this,'bookingpress_import_data_process_func'));
             add_action("wp_ajax_bookingpress_import_data_continue_process", array($this,'bookingpress_import_data_continue_process_func'));
 
+            add_action( 'init', array( $this, 'bookingpress_download_export_file' ) );
             /* Import Process Function Over Here */
 
         }
         
+        
+        /**
+         * Function for download export file
+         *
+         * @return void
+        */
+        function bookingpress_download_export_file(){
+
+            if ( isset($_GET['bpa_page']) && isset($_GET['action']) && isset($_GET['export_state']) && (( !empty( $_GET['bpa_page'] ) && 'bookingpress_download' == $_GET['bpa_page'] )) && ! empty( $_GET['action'] ) && 'download_bookingpress_export' == $_GET['action'] ) {
+
+				$nonce = ! empty( $_GET['export_state'] ) ? sanitize_text_field( $_GET['export_state'] ) : '';
+				if(!wp_verify_nonce( $nonce, 'bpa_download_export_file' ) ) {
+					return false;
+				}
+
+				if ( empty( $_GET['export_token'] ) ) {
+					return false;
+				}
+
+                $bpa_check_authorization = $this->bpa_check_authentication( 'import_export_settings', false, 'bpa_wp_nonce' );            
+                if( preg_match( '/error/', $bpa_check_authorization ) ){
+                    return false;
+                }                
+                
+                $export_token = base64_decode( $_GET['export_token'] ); // phpcs:ignore
+                
+                $export_id = $this->bookingpress_get_transient( $export_token );
+
+                if( empty( $export_id ) ){
+                    return false;
+                }
+
+                $export_id = base64_decode( $export_id );
+                $export_id = intval( $export_id );
+
+                $file_name = 'bookingpress_export_data-'.$export_id.'.txt';
+                
+                $file_path = wp_upload_dir()['basedir'] . '/bookingpress_export_records/' . $file_name;
+                if(file_exists($file_path)){
+                    $exported_file_name = 'bookingpress_exported_data_'.current_time('timestamp').'.txt';
+                    header('Content-Description: File Transfer');
+                    header('Content-Type: application/octet-stream');
+                    header('Content-Disposition: attachment; filename="' . basename($exported_file_name) . '"');
+                    header('Content-Length: ' . filesize($file_path));        
+                    readfile($file_path);
+                    exit;            
+
+                }
+
+                return false;
+            }
+
+        }
 
         /* Import Data Function Start here */
 
@@ -1061,12 +1115,12 @@ if (! class_exists('bookingpress_import_export') ) {
 
                             }else if($detail_import_detail_type == 'custom_fields' && isset($bookingpress_import_data[$detail_import_detail_type])){
 
-                                global $tbl_bookingpress_form_fields;
+                                global $tbl_bookingpress_form_fields, $BookingPress;
                                 $limit = 50;                            
                                 if(!empty($tbl_bookingpress_form_fields) && $this->bookingpress_check_table_exists_func($tbl_bookingpress_form_fields)){
                                     if($detail_import_last_record == 0){
                                         $wpdb->query("TRUNCATE TABLE $tbl_bookingpress_form_fields"); // phpcs:ignore 
-                                    }                                     
+                                    }
                                     $get_all_table_columns = $this->bookingpress_get_all_columns_func($tbl_bookingpress_form_fields);
                                     $total_record = count($bookingpress_import_data[$detail_import_detail_type]);
                                     $import_record_data = $bookingpress_import_data[$detail_import_detail_type];
@@ -2076,8 +2130,16 @@ if (! class_exists('bookingpress_import_export') ) {
                         $response['export_detail_id']       = '';    
                                                
                         $upload_dir = wp_upload_dir();
-                        $new_folder_path = $upload_dir['basedir'] . '/bookingpress_export_records';           
-                        $export_file = site_url().'/wp-content/uploads/bookingpress_export_records/bookingpress_export_data-'.$export_id.'.txt';  
+                        $new_folder_path = $upload_dir['basedir'] . '/bookingpress_export_records';
+
+                        $export_id = base64_encode( $export_id );
+                        $export_token = wp_generate_password( 6, true, false );
+
+                        $this->bookingpress_update_transient( $export_token, $export_id, HOUR_IN_SECONDS );
+
+                        $nonce = wp_create_nonce('bpa_download_export_file');
+                        $export_file = site_url().'?bpa_page=bookingpress_download&action=download_bookingpress_export&export_token='.base64_encode( $export_token ).'&export_state='.$nonce;  
+
                         $response['last_export_file']       = $export_file;
 
                         echo wp_json_encode( $response );

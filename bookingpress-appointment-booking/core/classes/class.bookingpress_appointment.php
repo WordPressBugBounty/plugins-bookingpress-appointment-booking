@@ -1794,8 +1794,18 @@ if (! class_exists('bookingpress_appointment') ) {
                     }else {
                         $bookingpress_sortable_duration_val = $service_duration;
                     }
+
+                    if( !empty( $get_appointment['bookingpress_appointment_end_date'] ) && '0000-00-00' != $get_appointment['bookingpress_appointment_end_date'] ){
+                        $appointment_end_date = $get_appointment['bookingpress_appointment_end_date'];
+                    } else {
+                        $appointment_end_date = $get_appointment['bookingpress_appointment_date'];
+                    }
+
+                    
+
                     $bookingpress_appointment_start_datetime = $get_appointment['bookingpress_appointment_date'].' '.$get_appointment['bookingpress_appointment_time'];
-                    $bookingpress_appointment_end_datetime = $get_appointment['bookingpress_appointment_date'].' '.$get_appointment['bookingpress_appointment_end_time'];
+                    $bookingpress_appointment_end_datetime = $appointment_end_date.' '.$get_appointment['bookingpress_appointment_end_time'];
+
                     if($service_duration_unit != 'd') {
                         $service_duration = $this->bookingpress_get_appointment_duration($bookingpress_appointment_start_datetime, $bookingpress_appointment_end_datetime);
                     } else {
@@ -1809,6 +1819,7 @@ if (! class_exists('bookingpress_appointment') ) {
                     $appointment['bookingpress_service_duration_sortable'] = (int)$this->bookingpress_get_appointment_duration_sorting($bookingpress_appointment_start_datetime, $bookingpress_appointment_end_datetime, $bookingpress_sortable_duration_val);
 
                     $appointment['appointment_duration'] = $service_duration;
+                    
                     $currency_name                       = $get_appointment['bookingpress_service_currency'];
                     $currency_symbol                     = $BookingPress->bookingpress_get_currency_symbol($currency_name);
 
@@ -1854,7 +1865,6 @@ if (! class_exists('bookingpress_appointment') ) {
                     $counter++;
                 }
             }
-
             
             $appointments = apply_filters('bookingpress_modify_appointment_data', $appointments);
 
@@ -1965,13 +1975,14 @@ if (! class_exists('bookingpress_appointment') ) {
             if(empty($appointment_start_datetime) || empty($appointment_end_datetime)){
                 return $service_duration;
             }
+            
             $bookingpress_tmp_start_datetime = new DateTime($appointment_start_datetime);
             $bookingpress_tmp_end_datetime = new DateTime($appointment_end_datetime);
             $booking_date_interval = $bookingpress_tmp_start_datetime->diff($bookingpress_tmp_end_datetime);
             $bookingpress_minute = $booking_date_interval->format('%i');
             $bookingpress_hour = $booking_date_interval->format('%h');
             $bookingpress_days = $booking_date_interval->format('%d');
-
+            
             if($bookingpress_minute > 0) {
                 $display_formatted_time = true;
                 if( $bookingpress_minute == 1 ){
@@ -1996,6 +2007,7 @@ if (! class_exists('bookingpress_appointment') ) {
             if($bookingpress_days > 1) {
                 $service_duration = $bookingpress_days.' ' . esc_html__('Days', 'bookingpress-appointment-booking'); 
             }
+            
             return $service_duration;
         }
 

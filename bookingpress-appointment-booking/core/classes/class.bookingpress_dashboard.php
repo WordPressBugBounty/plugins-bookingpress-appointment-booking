@@ -1536,6 +1536,7 @@ if (! class_exists('bookingpress_dashboard') ) {
                                 var data_arr  = time_slot_data_arr[m];
                                 if(data_arr.store_start_time != undefined && data_arr.store_end_time != undefined && data_arr.store_start_time == event) {   
                                     vm.appointment_formdata.appointment_booked_end_time = data_arr.store_end_time;
+                                    <?php do_action('bookingpress_admin_add_appointment_after_select_timeslot'); ?>
                                 }
                             }                                                    
                         }                      

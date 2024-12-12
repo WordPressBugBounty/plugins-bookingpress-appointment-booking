@@ -1591,6 +1591,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             $response['stop_check'] = $entire_month_details['stop_check'];
             $response['working_hour_timing_token'] = $entire_month_details['working_hour_timing_token'];
             $response['bpa_disabled_dates'] = $entire_month_details['bpa_disabled_dates'];
+            $response['overnight_booking_dates'] = $entire_month_details['overnight_booking_dates'];
 
             $end_ms = microtime( true );
             $response['time_taken'] = ( $end_ms - $start_ms ) . ' seconds';
@@ -1801,7 +1802,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             /** Reputelog - new code - need to check for optimization start */
 
             $first_available_date = '';
-            
+            $overnight_booking_dates = [];
 			foreach( $period as $dt ){
 				$bpa_check_date = $dt->format('Y-m-d');
                 if( $bookingpress_max_date < $bpa_check_date ){
@@ -1834,7 +1835,9 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                     }
                 }
 
-                if( $total_booked == $total_available_slots ){
+                $bookingpress_allow_to_disable_booked_date = apply_filters('bookingpress_allow_to_disable_booked_date',true,$bookingpress_selected_service);
+
+                if( $total_booked == $total_available_slots && $bookingpress_allow_to_disable_booked_date == true ){
                     $front_timings_data_combined = [];
                 }
 
@@ -1843,12 +1846,16 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                     $wp_timezone_offset = $BookingPress->bookingpress_convert_timezone_to_offset( $wp_timezone_offset );
                 }
 
+                
+
                 if( !empty( $front_timings_data_combined ) ){
                     foreach( $front_timings_data_combined as $timeslot_data ){
 
                         if( empty( $first_available_date ) ){
                             $first_available_date = $timeslot_data['store_service_date'];
                         }
+
+                        $is_next_date = !empty( $timeslot_data['is_next_day'] ) ? $timeslot_data['is_next_day'] : false;
 
                         $startDateTime = new DateTime( $timeslot_data['store_service_date'] . ' ' . $timeslot_data['store_start_time'], new DateTimeZone( $wp_timezone_offset ) );
 						$endDateTime = new DateTime( $timeslot_data['store_service_date'] . ' ' . $timeslot_data['store_end_time'], new DateTimeZone( $wp_timezone_offset ) );
@@ -1858,7 +1865,13 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
 
                         $start_time = date('Y-m-d H:i:s', strtotime( $timeslot_data['store_service_date'] . ' ' . $timeslot_data['store_start_time'] ) );
 
-                        $start_datetime = apply_filters( 'bookingpress_modify_start_date_time', $startDateTime->format('Y-m-d'), $start_time );
+                        if( true == $is_next_date && $timeslot_data['store_service_date'] != $timeslot_data['selected_date']){
+                            $tmpStartDateTime = clone $startDateTime;
+                            $tmpStartDateTime->modify( '-1 day');
+                            $start_datetime = apply_filters( 'bookingpress_modify_start_date_time', $tmpStartDateTime->format('Y-m-d'), $start_time );
+                        } else {
+                            $start_datetime = apply_filters( 'bookingpress_modify_start_date_time', $startDateTime->format('Y-m-d'), $start_time );
+                        }
 
                         $working_hour_details[ $start_datetime ][] = $timeslot_data;
 
@@ -1867,6 +1880,9 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                         }
                         if( !in_array( $front_timings_data['timing_token_data'], $working_hour_timing_token[ $start_datetime ] ) ){
                             $working_hour_timing_token[ $start_datetime ][] = $front_timings_data['timing_token_data'];
+                        }
+                        if( !empty( $timeslot_data['is_next_day'] ) && !in_array( $start_datetime, $overnight_booking_dates ) ){
+                            $overnight_booking_dates[] = $start_datetime;
                         }
                     }
 
@@ -1894,6 +1910,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                 $preselected_date = $working_hour_updated_data['pre_selected_date'];
                 $stop_check = $working_hour_updated_data['stop_check'];
                 $selected_date = $working_hour_updated_data['selected_date'];
+                $overnight_booking_dates = $working_hour_updated_data['overnight_booking_dates'];
             }
 
             /** Reputelog - new code - need to check for optimization End */
@@ -1908,10 +1925,12 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             $response['working_hour_timing_token'] = $working_hour_timing_token;
             $response['next_month_date'] = $max_end_date;
             $response['pre_selected_date'] = $preselected_date;
+            $response['overnight_booking_dates'] = $overnight_booking_dates;
             $response['bpa_disabled_dates'] = $bpa_retrieves_default_disabled_dates;
             $response['stop_check'] = ( false == $stop_check && ( $bookingpress_max_date <= $max_end_date ) ) ? true : $stop_check;
             $response['variant'] = 'success';
             $response['selected_date']  = $selected_date;
+
             
             if( true == $return ){
                 return $response;
@@ -1921,6 +1940,8 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             
             $end_ms = microtime( true );
             $response['time_taken'] = ( $end_ms - $start_ms ) . ' seconds';
+
+            $response = apply_filters( 'bookingpress_modify_disable_timeslot_external', $response );
 
             echo wp_json_encode( $response );
 			die;
@@ -3399,11 +3420,12 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
 
                 if(!empty($appointments_data) && is_array($appointments_data) ){
                     foreach($appointments_data as $k => $v){
-                        if( !empty( $v['bookingpress_selected_appointment_date'] ) && $BookingPress->bpa_is_pro_active() ){
+                        if( !empty( $v['bookingpress_selected_appointment_date'] ) && '0000-00-00' != $v['bookingpress_selected_appointment_date'] && $BookingPress->bpa_is_pro_active() ){
                             $bookingpress_appointment_date = date_i18n($bookingpress_date_format, strtotime($v['bookingpress_selected_appointment_date']));
                         } else {
                             $bookingpress_appointment_date = date_i18n($bookingpress_date_format, strtotime($v['bookingpress_appointment_date']));
                         }
+                        
                         $appointments_data[$k]['bookingpress_appointment_formatted_date'] = $bookingpress_appointment_date;
 
                         if( !empty( $v['bookingpress_selected_appointment_time'] ) && $BookingPress->bpa_is_pro_active() ){
@@ -3740,6 +3762,8 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                         if( true == $check_timezone ){
                             $booked_appointment_datetime = apply_filters( 'bookingpress_appointment_change_to_client_timezone', $booked_appointment_datetime, $bookingpress_entry_details['bookingpress_customer_timezone'], $bookingpress_entry_details );
                         }
+
+                        $bookingpress_default_date_time_format = apply_filters( 'bookingpress_modify_default_date_time_format', $bookingpress_default_date_time_format, $appointment_data_val );
                         
                         $booked_appointment_date = date($bookingpress_default_date_time_format, strtotime($booked_appointment_datetime));
                         
@@ -3748,7 +3772,8 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                     }
                 }else{
                     $check_timezone = false;
-                    if( !empty( $appointment_data['bookingpress_selected_appointment_date'] ) && !empty( $appointment_data['bookingpress_selected_appointment_time'] ) && '0000-00-00' != $appointment_data['bookingpress_selected_appointment_date'] && '00:00:00' != $appointment_data['bookingpress_selected_appointment_time'] ){
+                    
+                    if( ( !empty( $appointment_data['bookingpress_selected_appointment_date'] ) && !empty( $appointment_data['bookingpress_selected_appointment_time'] ) && '0000-00-00' != $appointment_data['bookingpress_selected_appointment_date'] && '00:00:00' != $appointment_data['bookingpress_selected_appointment_time'] ) || 'd' == $appointment_data['bookingpress_service_duration_unit']  ){
                         $booked_appointment_datetime = esc_html($appointment_data['bookingpress_selected_appointment_date']) . ' ' . esc_html($appointment_data['bookingpress_selected_appointment_time']);
                     } else {
                         $check_timezone = true;
@@ -3769,6 +3794,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                         $booked_appointment_datetime = apply_filters( 'bookingpress_appointment_change_to_client_timezone', $booked_appointment_datetime, $bookingpress_entry_details['bookingpress_customer_timezone'], $bookingpress_entry_details );
                     }
                     
+                    $bookingpress_default_date_time_format = apply_filters( 'bookingpress_modify_default_date_time_format', $bookingpress_default_date_time_format, $appointment_data );
                     
                     $booked_appointment_date = date_i18n($bookingpress_default_date_time_format, strtotime($booked_appointment_datetime));
                     $content .= "<div class='bookingpress_appointment_datetime_div'>";
@@ -4374,9 +4400,9 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
 				$_POST['appointment_data_obj'] =  !empty($_POST['appointment_data_obj']) ? array_map(array($this,'bookingpress_boolean_type_cast'), $_POST['appointment_data_obj'] ) : array(); // phpcs:ignore
             }
 
-            $selected_service_id = ! empty($_POST['service_id']) ? intval($_POST['service_id']) : 0;
+            $selected_service_id =  ! empty($_POST['service_id']) ? intval($_POST['service_id']) : 0;
             if( empty( $selected_service_id ) ){
-                $selected_service_id = !empty( $_POST['appointment_data_obj']['selected_service'] ) ? intval( $_POST['appointment_data_obj']['selected_service'] ) : 0;
+                $selected_service_id = !empty( $_POST['appointment_data_obj']['selected_service'] ) ? intval( $_POST['appointment_data_obj']['selected_service'] ) : ( !empty( $_POST['selected_service'] ) ? intval( $_POST['selected_service'] ) : 0 );
             }
 
             if( empty( $selected_date ) ){
@@ -4431,7 +4457,9 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             }
 
             if( empty( $total_booked_appiontments ) && !empty( $_POST['action'] ) && in_array( $_POST['action'], ['bookingpress_front_get_timings' ,'bookingpress_get_disable_date','bookingpress_get_whole_day_appointments', 'bookingpress_get_recurring_appointments' ] ) ){
-                $total_booked_appiontments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$tbl_bookingpress_appointment_bookings} WHERE bookingpress_appointment_date = %s $where_clause", $selected_date), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared --Reason: $tbl_bookingpress_appointment_bookings is a table name. false alarm
+
+                $where_clause_overnight_booking = apply_filters( 'bookingpress_modify_where_clause_for_overnight_booking', '', $selected_date );
+                $total_booked_appiontments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$tbl_bookingpress_appointment_bookings} WHERE (bookingpress_appointment_date = %s $where_clause_overnight_booking) $where_clause", $selected_date), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared --Reason: $tbl_bookingpress_appointment_bookings is a table name. false alarm
             }
 
             $shared_quantity = apply_filters('bookingpress_get_shared_capacity_data', 'true' );
@@ -4461,7 +4489,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             $selected_service_duration_val = !empty( $_POST['appointment_data_obj']['selected_service_duration'] ) ? intval( $_POST['appointment_data_obj']['selected_service_duration'] ) : '';
             
             $total_booked_appiontments = apply_filters( 'bookingpress_modify_booked_appointment_data', $total_booked_appiontments, $selected_date, $service_timings, $selected_service_id );   
-                       
+
             /** Remove Booked Time Slots from the final service timings - start */
             
             if( !empty( $total_booked_appiontments ) && 'd' == $selected_service_duration_unit && 1 == $selected_service_duration_val && empty( $service_timings ) ){
@@ -4488,8 +4516,6 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             
             $service_temp_timings = $service_timings;
 
-            
-
             if( !empty( $total_booked_appiontments ) && !empty( $service_timings ) ){
                 foreach( $total_booked_appiontments as $booked_appointment_data ){
                     $total_guests = 0;
@@ -4497,19 +4523,28 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                     $booked_appointment_start_time = $booked_appointment_data['bookingpress_appointment_time'];
                     $booked_appointment_end_time = $booked_appointment_data['bookingpress_appointment_end_time'];
 
+                    $booked_appointment_start_date = ( !empty( $booked_appointment_data['bookingpress_appointment_date'] ) && '0000-00-00' != $booked_appointment_data['bookingpress_appointment_date'] ) ? $booked_appointment_data['bookingpress_appointment_date'] : $selected_date;
+                    $booked_appointment_end_date = ( !empty( $booked_appointment_data['bookingpress_appointment_end_date'] ) && '0000-00-00' != $booked_appointment_data['bookingpress_appointment_end_date'] ) ? $booked_appointment_data['bookingpress_appointment_end_date'] : $booked_appointment_start_date;
+
                     if( '00:00:00' == $booked_appointment_end_time ){
                         $booked_appointment_end_time = '24:00:00';
                     }
+
+                    $booked_appointment_start_datetime = $booked_appointment_start_date.' ' . $booked_appointment_start_time;
+                    $booked_appointment_end_datetime = $booked_appointment_end_date.' ' . $booked_appointment_end_time;
+
                     
                     foreach( $service_timings as $sk => $time_slot_data ){
                         $current_time_start = $time_slot_data['store_start_time'].':00';
                         $current_time_end = $time_slot_data['store_end_time'].':00';
 
-                        if( $booked_appointment_data['bookingpress_appointment_date'] != $time_slot_data['store_service_date'] ){
-                            continue;
-                        }
+                        $current_time_start_datetime = $time_slot_data['store_service_date'] . ' ' . $current_time_start;
+                        $current_time_end_datetime = ( !empty( $time_slot_data['selected_end_date'] ) && '0000-00-00' != $time_slot_data['selected_end_date'] ) ? ( $time_slot_data['selected_end_date'] . ' '. $current_time_end ) : ( $time_slot_data['store_service_date'] . ' ' . $current_time_end );
 
-                        if( ( $booked_appointment_start_time >= $current_time_start && $booked_appointment_end_time <= $current_time_end ) || ( $booked_appointment_start_time < $current_time_end && $booked_appointment_end_time > $current_time_start) ){
+                        
+                        if( ( $booked_appointment_start_datetime >= $current_time_start_datetime && $booked_appointment_end_datetime <= $current_time_end_datetime ) || ( $booked_appointment_start_datetime < $current_time_end_datetime && $booked_appointment_end_datetime > $current_time_start_datetime ) ){
+
+                            //echo $booked_appointment_start_datetime. ' -- ' . $booked_appointment_end_datetime. ' -- ' . $current_time_start_datetime . ' --- ' . $current_time_end_datetime.' ----<br/><br/>';
                             
                             $bookingpress_single_time_slot_data = $time_slot_data;
 
@@ -4529,10 +4564,9 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                                 $capacity_count += $extra_members;
                                 $total_guests = $extra_members;
                                 $service_timings[ $sk ]['guest_members'] = $total_guests;
-                            } else {                                
+                            } else {
                                 $service_timings[ $sk ]['guest_members'] = $total_guests;
-                            }
-                                                        
+                            }                                                        
 
                             /* Share capacity betweenslot issue fixed start */                                                           
                             $bookingpress_reduce_capacity = true;
@@ -4590,7 +4624,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                                 }
                                 $service_timings[ $sk ]['is_reduced_capacity'] = true;
                             } else {
-                                if( $booked_appointment_start_time == $current_time_start && $booked_appointment_end_time == $current_time_end ){
+                                if( $booked_appointment_start_datetime == $current_time_start_datetime && $booked_appointment_end_datetime == $current_time_end_datetime ){
                                     
                                     $service_timings[ $sk ]['max_capacity'] -= $capacity_count; // reduce capacity for exact time slot
                                     if( $service_timings[ $sk ]['max_capacity'] < 0 ){
@@ -4856,11 +4890,21 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                 $bookingpress_selected_end_time = $service_timings[0]['end_time'];
             }
 
+            $next_day_times = [];
+            foreach( $morning_time as $mkey => $mvalue ){
+                if( !empty( $mvalue['is_next_day'] ) && ( true === $mvalue['is_next_day'] || 'true' == $mvalue['is_next_day'] ) ){
+                    $next_day_times[] = $mvalue;
+                    unset( $morning_time[ $mkey ] );
+                }
+            }
+
+            $morning_time = array_values( $morning_time );
+
             $return_data = array(
                 'morning_time'   => $morning_time,
                 'afternoon_time' => $afternoon_time,
                 'evening_time'   => $evening_time,
-                'night_time'     => $night_time,
+                'night_time'     => array_merge( $night_time, $next_day_times )
             );
 
             if( !empty( $service_timings_data['is_custom_duration'] ) ){
@@ -5004,6 +5048,10 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             extract($args);
 
             
+            $category = explode( ',', $category );
+            $category = array_map( 'intval', $category );
+            $category = implode( ',', $category );
+
             $Bookingpress_service  = 0;
             $Bookingpress_category = 0;
             $selected_category = 0;
@@ -6420,6 +6468,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
 
             $bookingpress_front_vue_data_fields['v_calendar_disable_dates'] = array();
             $bookingpress_front_vue_data_fields['v_calendar_available_dates'] = array();
+            $bookingpress_front_vue_data_fields['v_calendar_blocked_dates'] = array();
             $bookingpress_front_vue_data_fields['v_calendar_available_only_date'] = array();
             $bookingpress_front_vue_data_fields['v_calendar_timeslots_data'] = array();
             $bookingpress_front_vue_data_fields['v_calendar_time_token_data'] = array();
@@ -7226,6 +7275,11 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             
             $bookigpress_time_format_for_booking_form = $BookingPress->bookingpress_get_customize_settings('bookigpress_time_format_for_booking_form','booking_form');
 			$bookigpress_time_format_for_booking_form = !empty($bookigpress_time_format_for_booking_form) ? $bookigpress_time_format_for_booking_form : '2';
+
+            $convert_timeslot_to_client_timezone = false;
+            if( $BookingPress->bpa_is_pro_active() ){
+                $convert_timeslot_to_client_timezone = $BookingPress->bookingpress_get_settings( 'show_bookingslots_in_client_timezone', 'general_setting' );
+            }
             
             $bookingpress_global_details     = $bookingpress_global_options->bookingpress_global_options();
             $bookingpress_formatted_timeslot = $bookingpress_global_details['bpa_time_format_for_timeslot'];
@@ -7248,6 +7302,9 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
 
             $bookingpress_step_navigation_token_postdata = '';
             $bookingpress_step_navigation_token_postdata = apply_filters( 'bookingpress_modify_step_navigation_token_postdata', $bookingpress_step_navigation_token_postdata );
+
+            $bookingpress_step_navigation_token_selection_data = '';
+            $bookingpress_step_navigation_token_selection_data = apply_filters( 'bookingpress_modify_step_navigation_token_date_selection', $bookingpress_step_navigation_token_selection_data );
 
             $bookingpress_use_legacy_functions = 'false';
             if( $BookingPress->bpa_is_pro_active() && version_compare( $BookingPress->bpa_pro_plugin_version(), '3.9.8', '<' ) ){
@@ -7619,6 +7676,8 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                 '.$bookingpress_before_selecting_booking_service_data.'
                 
                 vm.appointment_step_form_data.selected_service = selected_service_id;
+                vm.v_calendar_blocked_dates = [];
+                vm.v_calendar_attributes_current = [];
                 
                 vm.appointment_step_form_data.selected_service_name = service_name;
                 vm.appointment_step_form_data.selected_service_price = service_price;
@@ -7671,7 +7730,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                 let available_dates = vm.v_calendar_available_dates;
                 let dayId = day.id;
                 let dayString = dayId + " 00:00:00";
-                if( "undefined" == typeof dayString || "undefined" == typeof available_dates || 0 > available_dates.indexOf( dayString ) || vm.bpa_current_selected_date == dayId){
+                if( "undefined" == typeof dayString || "undefined" == typeof available_dates || 0 > available_dates.indexOf( dayString ) || vm.bpa_current_selected_date == dayId || ("undefined" != typeof vm.v_calendar_blocked_dates && vm.v_calendar_blocked_dates.includes( day.id ) ) ){
                     return false;
                 }
                 vm.service_timing = "-2";
@@ -7814,15 +7873,16 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                     vm.appointment_step_form_data.selected_formatted_start_end_time = time_details.formatted_start_end_time;
                 } 
 
-                if( /* "undefined" != typeof vm.bookingpress_timezone_offset && */ "" != store_start_time && "" != store_end_time && "" != store_selected_date ){
+                if("" != store_start_time && "" != store_end_time && "" != store_selected_date ){
                     vm.appointment_step_form_data.store_start_time = store_start_time;
                     vm.appointment_step_form_data.store_end_time = store_end_time;
                     vm.appointment_step_form_data.client_offset = vm.bookingpress_timezone_offset;
                     vm.appointment_step_form_data.store_selected_date = store_selected_date;
+                    vm.appointment_step_form_data.store_selected_end_date = time_details.selected_end_date || store_selected_date;
                 }
 
                 vm.appointment_step_form_data.customer_selected_date = time_details.client_date || vm.appointment_step_form_data.selected_date;
-                vm.appointment_step_form_data.customer_selected_end_date = time_details.client_date || vm.appointment_step_form_data.selected_date;
+                vm.appointment_step_form_data.customer_selected_end_date = time_details.client_end_date || time_details.client_date || vm.appointment_step_form_data.selected_date;
                 vm.appointment_step_form_data.customer_selected_time = time_details.client_start_time || selected_start_time;
                 vm.appointment_step_form_data.customer_selected_end_time = time_details.client_end_time || selected_end_time;
                 
@@ -8085,9 +8145,10 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
 
                 let current_tab = vm.bookingpress_sidebar_step_data[vm.bookingpress_current_tab].next_tab_name;
 
-                if( true == force_update || ( "datetime" == vm.bookingpress_sidebar_step_data[ vm.bookingpress_current_tab ].previous_tab_name && "d" != vm.appointment_step_form_data.selected_service_duration_unit && "datetime" != vm.bookingpress_current_tab && "false" == use_legacy ) ){
-                    console.log( vm.is_bookingpress_updating_token );
+                if( (true == force_update && typeof vm.v_calendar_time_token_data != "undefined") || ( "datetime" == vm.bookingpress_sidebar_step_data[ vm.bookingpress_current_tab ].previous_tab_name && "d" != vm.appointment_step_form_data.selected_service_duration_unit && "datetime" != vm.bookingpress_current_tab && "false" == use_legacy ) ){
+
                     let appointment_selected_date = vm.appointment_step_form_data.store_selected_date || vm.appointment_step_form_data.selected_date;
+                    '.$bookingpress_step_navigation_token_selection_data.'
                     let selected_token_data = vm.v_calendar_time_token_data[ appointment_selected_date ][0];
 
                     var bkp_wpnonce_pre = "'.wp_create_nonce( 'bpa_wp_nonce' ).'";
@@ -8119,6 +8180,158 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             },
             bookingpress_working_dates_data( working_hour_details, response_data ){
                 const vm = this;
+
+                let timeformat = "'.$bookigpress_time_format_for_booking_form.'";
+                let is_client_timezone = "'.$convert_timeslot_to_client_timezone.'";
+                let updated_working_hour_details = {};
+                let available_dates = [];
+                let response = {};
+                let firstAvailableDate = "";
+
+                let overnight_booking = ("undefined" != typeof response_data.overnight_booking_dates ) ? response_data.overnight_booking_dates : [];
+
+                let sorted_working_hours = [];
+
+                
+                for( let wdate in working_hour_details ){
+                    let x = 0;
+                    let n = 0;
+
+                    let is_overnight_booking = overnight_booking.includes( wdate ) || false;
+
+                    let overnight_booking_date = "";
+
+                    sorted_working_hours[wdate] = working_hour_details[ wdate ];
+
+                    sorted_working_hours[wdate].sort( (a,b) => {
+                        return ( parseInt( a.counter_pos ) < parseInt( b.counter_pos ) ) ? -1 : 1;
+                    } );
+                    
+                    for( let wh_data of sorted_working_hours[wdate] ){
+                        let start_datetime = wh_data.store_service_date + " " + wh_data.store_start_time;
+                        let end_datetime = wh_data.selected_end_date + " " + wh_data.store_end_time;
+                        let timezone = wh_data.store_offset;
+
+                        let stTime = wp.hooks.applyFilters( "bookingpress_modify_time_with_timezone", wh_data.store_start_time, wh_data, "start" );
+                        wh_data.client_start_time = stTime;
+                        let etTime = wp.hooks.applyFilters( "bookingpress_modify_time_with_timezone", wh_data.store_end_time, wh_data, "end" );
+                        wh_data.client_end_time = etTime;
+
+                        let stTimeNew = wp.hooks.applyFilters( "bookingpress_modify_datetime_with_timezone", start_datetime, wh_data, "start", true );
+                        let etTimeNew = wp.hooks.applyFilters( "bookingpress_modify_datetime_with_timezone", end_datetime, wh_data, "end", true );
+
+                        let updated_wdate;
+                        if( "string" == typeof stTimeNew ){
+                            updated_wdate = wdate;
+                        } else {
+                            updated_wdate = stTimeNew.toISOString().split("T")[0];
+                        }                        
+                        let updated_edate;
+                        if( "string" == typeof etTimeNew ){
+                            updated_edate = wh_data.selected_end_date;
+                        } else {
+                            updated_edate = etTimeNew.toISOString().split("T")[0];
+                        }
+                        
+                        if( "undefined" != typeof wh_data.is_day_service && true == wh_data.is_day_service ){
+                            if( "undefined" == typeof updated_working_hour_details[ updated_wdate ] && updated_wdate >= vm.jsCurrentDate.toISOString().split("T")[0] ){
+                                updated_working_hour_details[ updated_wdate ] = [];
+                                if( false == is_overnight_booking && !available_dates.includes( updated_wdate + " 00:00:00" ) ){
+                                    available_dates.push( updated_wdate + " 00:00:00" );
+                                }
+                                n++;
+                            } else {
+                                continue;
+                            }
+                        } else {
+                            if( "undefined" == typeof updated_working_hour_details[ updated_wdate ] ){
+                                updated_working_hour_details[ updated_wdate ] = [];
+                                if( false == is_overnight_booking && !available_dates.includes( updated_wdate + " 00:00:00" ) ){
+                                    available_dates.push( updated_wdate + " 00:00:00" );
+                                }
+                                n++;
+                            }
+                        }
+
+                        if( "" == firstAvailableDate ){
+                            firstAvailableDate = ( "undefined" != typeof response_data.pre_selected_date && true == response_data.pre_selected_date && "undefined" != typeof vm.open_customer_reschedule_appointment_modal && true == vm.open_customer_reschedule_appointment_modal ) ? response_data.selected_date : updated_wdate;
+                        }
+
+                        wh_data.client_date = updated_wdate;
+                        wh_data.client_end_date = updated_edate;
+
+                        if( true == is_overnight_booking && "" == overnight_booking_date ){
+                            overnight_booking_date = updated_wdate;
+                            if( "undefined" == typeof updated_working_hour_details[ overnight_booking_date ] ){
+                                updated_working_hour_details[ overnight_booking_date ] = [];
+                            }
+                        }
+                        wh_data.is_both_next_day_time_v2 = false;
+
+                        if( true == is_overnight_booking ){
+
+                            if( "true" == is_client_timezone ){
+                                wh_data.is_next_day = false;
+                            }
+    
+                            if( updated_edate > updated_wdate ){
+                                wh_data.is_next_day = true;
+                            } 
+                            
+                            if( updated_edate == updated_wdate && updated_wdate > overnight_booking_date ){
+                                wh_data.is_both_next_day_time_v2 = true;
+                                wh_data.is_next_day = true;
+                                wh_data.client_date = wh_data.client_end_date;
+                            }
+                        }
+
+                        if( true == wh_data.is_both_next_day_time && wh_data.client_end_date > wh_data.client_date ){
+                            wh_data.client_date = wh_data.client_end_date;
+                        }
+
+                        let startTimeHour = stTime.split(":")[0];
+                        
+                        let formatted_startTime = vm.bookingpress_format_time( stTime );
+                        let formatted_endTime = vm.bookingpress_format_time( etTime );
+
+                        let formatted_datetime = formatted_startTime + " - " + formatted_endTime;
+                        if( "1" == timeformat || "2" == timeformat ){
+                            formatted_datetime = formatted_startTime + " to " + formatted_endTime; 
+                        } else if ( "5" == timeformat || "6" == timeformat ){
+                            formatted_datetime = formatted_startTime + " - " + formatted_endTime;
+                        } else if( "3" == timeformat || "4" == timeformat ){
+                            formatted_datetime = formatted_startTime;
+                        }
+
+                        wh_data.formatted_start_time = formatted_startTime;
+                        wh_data.formatted_end_time = formatted_endTime;
+                        wh_data.formatted_start_end_time = formatted_datetime;
+                        wh_data.start_hour = startTimeHour;
+
+                        if( true == is_overnight_booking ){
+                            updated_working_hour_details[ overnight_booking_date ][x] = wh_data;
+                            if( !available_dates.includes( overnight_booking_date + " 00:00:00" ) ){
+                                available_dates.push( overnight_booking_date + " 00:00:00" );
+                            }
+                        } else {
+                            updated_working_hour_details[ updated_wdate ][x] = wh_data;
+                        }
+
+                        x++;
+                    }
+                }
+
+                available_dates = wp.hooks.applyFilters( "bookingpress_modify_available_dates_with_day_service", available_dates, working_hour_details, response_data, vm );
+                firstAvailableDate = wp.hooks.applyFilters( "bookingpress_modify_first_available_date_with_day_service", firstAvailableDate, available_dates, vm );
+
+                response.available_dates = available_dates;
+                response.updated_working_hour_details = updated_working_hour_details;
+                response.selected_date = firstAvailableDate;
+
+                return response;
+            },
+            bookingpress_working_dates_data_legacy( working_hour_details, response_data ){
+                const vm = this;
                 let timeformat = "'.$bookigpress_time_format_for_booking_form.'";
                 let updated_working_hour_details = {};
                 let available_dates = [];
@@ -8139,6 +8352,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                         wh_data.client_end_time = etTime;
 
                         let updated_wdate = wp.hooks.applyFilters( "bookingpress_modify_date_with_timezone", wdate, wh_data );
+                        let updated_edate = wp.hooks.applyFilters( "bookingpress_modify_date_with_timezone", wh_data.selected_end_date, wh_data );
                         
                         if( "undefined" != typeof wh_data.is_day_service && true == wh_data.is_day_service ){
                             if( "undefined" == typeof updated_working_hour_details[ updated_wdate ] && updated_wdate >= vm.jsCurrentDate.toISOString().split("T")[0] ){
@@ -8164,6 +8378,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                         }
 
                         wh_data.client_date = updated_wdate;
+                        wh_data.client_end_date = updated_edate;
 
                         let startTimeHour = stTime.split(":")[0];
                         
@@ -8268,6 +8483,19 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                         
                     vm.appointment_step_form_data.selected_date = "";
                     selectedDate = ( "" != preselected_date ) ? preselected_date : ( wh_details.selected_date || selectedDate );
+                    
+                    vm.v_calendar_available_dates = wh_details.available_dates;
+                    vm.v_calendar_timeslots_data = wh_details.updated_working_hour_details;
+                    vm.no_timeslot_available = false;
+                    let v_available_dates_only = [];
+                    vm.v_calendar_available_dates.forEach( function( i,e ){
+                        v_available_dates_only.push( i.split(" ")[0] );
+                    });
+                    if( !v_available_dates_only.includes( selectedDate ) && wh_details.selected_date != selectedDate ){
+                        selectedDate = wh_details.selected_date;
+                    }
+                    vm.v_calendar_available_only_date = v_available_dates_only;
+
                     if( "undefined" != typeof selectedDate ){
                         (function( $ref_ ){
                             setTimeout(function(){
@@ -8292,15 +8520,6 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                             },10);
                         })( this.$refs );
                     }
-                    
-                    vm.v_calendar_available_dates = wh_details.available_dates;
-                    vm.v_calendar_timeslots_data = wh_details.updated_working_hour_details;
-                    vm.no_timeslot_available = false;
-                    let v_available_dates_only = [];
-                    vm.v_calendar_available_dates.forEach( function( i,e ){
-                        v_available_dates_only.push( i.split(" ")[0] );
-                    });
-                    vm.v_calendar_available_only_date = v_available_dates_only;
 
                     /* V-date-picker attributes */
                     let vcal_attributes = response.data.vcal_attributes;
@@ -8331,6 +8550,20 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                     }
 
                     vm.v_calendar_default_label = response.data.max_capacity_capacity;
+
+                    let vcal_capacity_attrs = response.data.vcal_capacity_attrs;
+                    if( "undefined" != typeof vcal_capacity_attrs && vcal_capacity_attrs.length != "" ){
+                        for( let vcal_date_v2 in vcal_capacity_attrs ){
+                            let vcal_data_v2 = vcal_capacity_attrs[ vcal_date_v2 ];
+
+                            vcal_date_v2 = wp.hooks.applyFilters( "bookingpress_modify_date_with_timezone", vcal_date_v2, {"store_service_date":vcal_date_v2,"store_start_time":"00:00:00","store_offset":"'.$wp_timezone_offset.'"} );
+
+                            if( "0" == vcal_data_v2 ){
+                                vm.v_calendar_blocked_dates.push( vcal_date_v2 );
+                            }
+                        }
+                    }
+
                     /* V-date-picker attributes */
 
                     vm.v_calendar_default_label = response.data.max_capacity_capacity;
@@ -8432,6 +8665,19 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                         }
                         vm.v_calendar_attributes = vcal_attr_data;
                         vm.v_calendar_attributes_current = Object.assign( {}, vm.v_calendar_attributes_current, vcal_attr_data_current );
+                    }
+
+                    let vcal_capacity_attrs = response.data.vcal_capacity_attrs;
+                    if( "undefined" != typeof vcal_capacity_attrs && vcal_capacity_attrs.length != "" ){
+                        for( let vcal_date_v2 in vcal_capacity_attrs ){
+                            let vcal_data_v2 = vcal_capacity_attrs[ vcal_date_v2 ];
+
+                            vcal_date_v2 = wp.hooks.applyFilters( "bookingpress_modify_date_with_timezone", vcal_date_v2, {"store_service_date":vcal_date_v2,"store_start_time":"00:00:00","store_offset":"'.$wp_timezone_offset.'"} );
+
+                            if( "0" == vcal_data_v2 ){
+                                vm.v_calendar_blocked_dates.push( vcal_date_v2 );
+                            }
+                        }
                     }
 
                     vm.v_calendar_available_dates.forEach( function( i,e ){
@@ -8544,9 +8790,9 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                     "evening_time":[],
                     "night_time":[]
                 };
-                let x = 1;
+                let x = 0;
                 for( let timeslot_data of timeslot_details ){
-                    if( "undefined" != typeof timeslot_data ){
+                    if( "undefined" != typeof timeslot_data && ( "undefined" == typeof timeslot_data.is_next_day || timeslot_data.is_next_day == false) ){
                         let startHour = parseInt( timeslot_data.start_hour );
                         if( startHour >= 0 && startHour < afternoon_slot_timings ){
                             service_timings_data.morning_time.push( timeslot_data );
@@ -8560,6 +8806,25 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                         x++;
                     }
                 }
+                if( timeslot_details.length > x ){
+                    for( let timeslot_data of timeslot_details ){
+                        if( "undefined" != typeof timeslot_data && "undefined" != typeof timeslot_data.is_next_day && timeslot_data.is_next_day == true ){
+                            let startHour = parseInt( timeslot_data.start_hour );
+                            service_timings_data.night_time.push( timeslot_data );
+                        }
+                    }
+                }
+                let night_time = service_timings_data.night_time;
+                let night_time_sorted = [];
+                for( let x in night_time ){
+                    night_time_sorted.push( night_time[x] );
+                }
+                
+                night_time_sorted.sort( (a,b) => {
+                    return ( parseInt( a.counter_pos ) < parseInt( b.counter_pos ) ) ? -1 : 1;
+                } );
+                service_timings_data.night_time = night_time_sorted;
+                
                 return service_timings_data;
             },
             bookingpress_disable_date_xhr( bpa_selected_service = "", bpa_selected_date = "", showLoader = true ){
@@ -9349,6 +9614,11 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             $bookingpress_global_details     = $bookingpress_global_options->bookingpress_global_options();
             $bookingpress_formatted_timeslot = $bookingpress_global_details['bpa_time_format_for_timeslot'];
 
+            $convert_timeslot_to_client_timezone = false;
+            if( $BookingPress->bpa_is_pro_active() ){
+                $convert_timeslot_to_client_timezone = $BookingPress->bookingpress_get_settings( 'show_bookingslots_in_client_timezone', 'general_setting' );
+            }
+
             $bookingpress_site_current_lang_moment_locale = get_locale();
         ?>
             bookingpress_toggle_calendar(){
@@ -9388,6 +9658,157 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                 return response;
             },
             bookingpress_working_dates_data( working_hour_details, response_data ){
+                const vm = this;
+
+                let timeformat = "<?php echo esc_html( $bookigpress_time_format_for_booking_form ); ?>";
+                let is_client_timezone = "<?php echo $convert_timeslot_to_client_timezone; ?>";
+                let updated_working_hour_details = {};
+                let available_dates = [];
+                let response = {};
+                let firstAvailableDate = "";
+
+                let overnight_booking = ("undefined" != typeof response_data.overnight_booking_dates ) ? response_data.overnight_booking_dates : [];
+
+                let sorted_working_hours = [];
+
+                for( let wdate in working_hour_details ){
+                    let x = 0;
+                    let n = 0;
+
+                    let is_overnight_booking = overnight_booking.includes( wdate ) || false;
+
+                    let overnight_booking_date = "";
+
+                    sorted_working_hours[wdate] = working_hour_details[ wdate ];
+
+                    sorted_working_hours[wdate].sort( (a,b) => {
+                        return ( parseInt( a.counter_pos ) < parseInt( b.counter_pos ) ) ? -1 : 1;
+                    } );
+                    
+                    for( let wh_data of sorted_working_hours[wdate] ){
+                        let start_datetime = wh_data.store_service_date + " " + wh_data.store_start_time;
+                        let end_datetime = wh_data.selected_end_date + " " + wh_data.store_end_time;
+                        let timezone = wh_data.store_offset;
+
+                        let stTime = wp.hooks.applyFilters( "bookingpress_modify_time_with_timezone", wh_data.store_start_time, wh_data, "start" );
+                        wh_data.client_start_time = stTime;
+                        let etTime = wp.hooks.applyFilters( "bookingpress_modify_time_with_timezone", wh_data.store_end_time, wh_data, "end" );
+                        wh_data.client_end_time = etTime;
+
+                        let stTimeNew = wp.hooks.applyFilters( "bookingpress_modify_datetime_with_timezone", start_datetime, wh_data, "start", true );
+                        let etTimeNew = wp.hooks.applyFilters( "bookingpress_modify_datetime_with_timezone", end_datetime, wh_data, "end", true );
+
+                        let updated_wdate;
+                        if( "string" == typeof stTimeNew ){
+                            updated_wdate = wdate;
+                        } else {
+                            updated_wdate = stTimeNew.toISOString().split("T")[0];
+                        }                        
+                        let updated_edate;
+                        if( "string" == typeof etTimeNew ){
+                            updated_edate = wh_data.selected_end_date;
+                        } else {
+                            updated_edate = etTimeNew.toISOString().split("T")[0];
+                        }
+                        
+                        if( "undefined" != typeof wh_data.is_day_service && true == wh_data.is_day_service ){
+                            if( "undefined" == typeof updated_working_hour_details[ updated_wdate ] && updated_wdate >= vm.jsCurrentDate.toISOString().split("T")[0] ){
+                                updated_working_hour_details[ updated_wdate ] = [];
+                                if( false == is_overnight_booking && !available_dates.includes( updated_wdate + " 00:00:00" ) ){
+                                    available_dates.push( updated_wdate + " 00:00:00" );
+                                }
+                                n++;
+                            } else {
+                                continue;
+                            }
+                        } else {
+                            if( "undefined" == typeof updated_working_hour_details[ updated_wdate ] ){
+                                updated_working_hour_details[ updated_wdate ] = [];
+                                if( false == is_overnight_booking && !available_dates.includes( updated_wdate + " 00:00:00" ) ){
+                                    available_dates.push( updated_wdate + " 00:00:00" );
+                                }
+                                n++;
+                            }
+                        }
+
+                        if( "" == firstAvailableDate ){
+                            firstAvailableDate = ( "undefined" != typeof response_data.pre_selected_date && true == response_data.pre_selected_date && "undefined" != typeof vm.open_customer_reschedule_appointment_modal && true == vm.open_customer_reschedule_appointment_modal ) ? response_data.selected_date : updated_wdate;
+                        }
+
+                        wh_data.client_date = updated_wdate;
+                        wh_data.client_end_date = updated_edate;
+
+                        if( true == is_overnight_booking && "" == overnight_booking_date ){
+                            overnight_booking_date = updated_wdate;
+                            if( "undefined" == typeof updated_working_hour_details[ overnight_booking_date ] ){
+                                updated_working_hour_details[ overnight_booking_date ] = [];
+                            }
+                        }
+                        wh_data.is_both_next_day_time_v2 = false;
+
+                        if( true == is_overnight_booking ){
+
+                            if( "true" == is_client_timezone ){
+                                wh_data.is_next_day = false;
+                            }
+    
+                            if( updated_edate > updated_wdate ){
+                                wh_data.is_next_day = true;
+                            } 
+                            
+                            if( updated_edate == updated_wdate && updated_wdate > overnight_booking_date ){
+                                wh_data.is_both_next_day_time_v2 = true;
+                                wh_data.is_next_day = true;
+                                wh_data.client_date = wh_data.client_end_date;
+                            }
+                        }
+
+                        if( true == wh_data.is_both_next_day_time && wh_data.client_end_date > wh_data.client_date ){
+                            wh_data.client_date = wh_data.client_end_date;
+                        }
+
+                        let startTimeHour = stTime.split(":")[0];
+                        
+                        let formatted_startTime = vm.bookingpress_format_time( stTime );
+                        let formatted_endTime = vm.bookingpress_format_time( etTime );
+
+                        let formatted_datetime = formatted_startTime + " - " + formatted_endTime;
+                        if( "1" == timeformat || "2" == timeformat ){
+                            formatted_datetime = formatted_startTime + " to " + formatted_endTime; 
+                        } else if ( "5" == timeformat || "6" == timeformat ){
+                            formatted_datetime = formatted_startTime + " - " + formatted_endTime;
+                        } else if( "3" == timeformat || "4" == timeformat ){
+                            formatted_datetime = formatted_startTime;
+                        }
+
+                        wh_data.formatted_start_time = formatted_startTime;
+                        wh_data.formatted_end_time = formatted_endTime;
+                        wh_data.formatted_start_end_time = formatted_datetime;
+                        wh_data.start_hour = startTimeHour;
+
+                        if( true == is_overnight_booking ){
+                            updated_working_hour_details[ overnight_booking_date ][x] = wh_data;
+                            if( !available_dates.includes( overnight_booking_date + " 00:00:00" ) ){
+                                available_dates.push( overnight_booking_date + " 00:00:00" );
+                            }
+                        } else {
+                            updated_working_hour_details[ updated_wdate ][x] = wh_data;
+                        }
+
+                        x++;
+                    }
+                }
+
+                available_dates = wp.hooks.applyFilters( "bookingpress_modify_available_dates_with_day_service", available_dates, working_hour_details, response_data, vm );
+                firstAvailableDate = wp.hooks.applyFilters( "bookingpress_modify_first_available_date_with_day_service", firstAvailableDate, available_dates, vm );
+
+                response.available_dates = available_dates;
+                response.updated_working_hour_details = updated_working_hour_details;
+                response.selected_date = firstAvailableDate;
+
+                return response;
+            },
+            bookingpress_working_dates_data_legacy( working_hour_details, response_data ){
                 const vm = this;
                 let timeformat = "<?php echo esc_html( $bookigpress_time_format_for_booking_form ); ?>";
                 let updated_working_hour_details = {};
@@ -9476,7 +9897,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                 };
                 let x = 1;
                 for( let timeslot_data of timeslot_details ){
-                    if( "undefined" != typeof timeslot_data ){
+                    if( "undefined" != typeof timeslot_data && ( "undefined" == typeof timeslot_data.is_next_day || timeslot_data.is_next_day == false) ){
                         let startHour = parseInt( timeslot_data.start_hour );
                         if( startHour >= 0 && startHour < afternoon_slot_timings ){
                             service_timings_data.morning_time.push( timeslot_data );
@@ -9488,6 +9909,14 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                             service_timings_data.night_time.push( timeslot_data );
                         }
                         x++;
+                    }
+                }
+                if( timeslot_details.length > x ){
+                    for( let timeslot_data of timeslot_details ){
+                        if( "undefined" != typeof timeslot_data && "undefined" != typeof timeslot_data.is_next_day && timeslot_data.is_next_day == true ){
+                            let startHour = parseInt( timeslot_data.start_hour );
+                            service_timings_data.night_time.push( timeslot_data );
+                        }
                     }
                 }
                 return service_timings_data;
