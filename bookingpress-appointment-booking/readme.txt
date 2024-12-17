@@ -5,7 +5,7 @@ Donate link: https://bookingpressplugin.com/
 Requires at least: 5.3.0
 Tested up to: 6.7.1
 Requires PHP: 5.6
-Stable tag: 1.1.22
+Stable tag: 1.1.23
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,10 @@ Note: BookingPress lite has many more cool features than other free WordPress bo
 * 🔘 Custom service options include group booking, before and after buffer hours, extras, deposits, and different ways to pay for each service.
 * 👩🏻👨🏻‍🦰 Manage a multiple number of employees by building an employee database with each person's unique working hours, service schedule, capacity, and price as well as setting up holidays and other special days.
 * 🌍 Multilingual support - options to translate the names of categories, services, extras, events, notification templates, etc. in multiple languages that are set on your website.
+* 🌙 Allow Convenient Overnight Booking of service for appointment and booking flexibility. 
+* 🌍 Enable Country-wise and Location-wise Tax management with the Tax Addon for accurate billing across all regions. 
+* ⚙️ Set Minimum and Maximum Number of Service Extras that Customers can choose for smooth management.
+* 🔍 The new search bar feature allows for quick and easy searching of staff, services, and location during the booking process that improves the overall user experience.
 * 🎟️ Create and send discount vouchers to devoted consumers for use during bookings.
 * 🕛📞 24/7 Customer support.
 
@@ -216,17 +220,14 @@ Please follow the steps for installation:
 
 == Changelog ==
 
+= 1.1.23 =
+* Minor bug fixes
+
 = 1.1.22 =
 * Improved disable dates background color in the booking form calendar
 * Other Minor bug fixes
 
 = 1.1.21 =
-* Minor bug fixes
-
-= 1.1.20 =
-* Minor bug fixes
-
-= 1.1.19 =
 * Minor bug fixes
 
 For a complete list of changelogs of earlier versions, please check the website [here](https://www.bookingpressplugin.com/documents/changelog/#free-version)

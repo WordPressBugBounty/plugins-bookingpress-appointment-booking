@@ -1706,8 +1706,26 @@ if( version_compare( $bookingpress_old_version, '1.1.22', '<') ){
     $wpdb->query("ALTER TABLE {$tbl_bookingpress_payment_logs} ADD bookingpress_appointment_end_date DATE AFTER bookingpress_appointment_date"); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Reason: $tbl_bookingpress_entries is table name defined globally. False Positive alarm
 }
 
+if( version_compare( $bookingpress_old_version, '1.1.23', '<') ){
+    global $wpdb, $bookingpress_import_export;
+
+    $bookingpress_import_export->bookingpress_remove_import_export_directory();
+    $bookingpress_import_export->bookingpress_remove_import_export_directory('import');
+
+    $upload_dir = wp_upload_dir();
+    $exported_dir_path = $upload_dir['basedir'] . '/bookingpress_export_records';
+    $imported_dir_path = $upload_dir['basedir'] . '/bookingpress_import_records';
+
+    $file_content = "<?php\n //silence is golden";
+    $file_name = 'index.php';
+
+    file_put_contents( $exported_dir_path.'/'.$file_name, $file_content );
+    file_put_contents( $imported_dir_path.'/'.$file_name, $file_content );
+
+}
+
 $BookingPress->bookingpress_cleanup_transient_data_hook_callback();
-$bookingpress_new_version = '1.1.22';
+$bookingpress_new_version = '1.1.23';
 update_option('bookingpress_new_version_installed', 1);
 update_option('bookingpress_version', $bookingpress_new_version);
 update_option('bookingpress_updated_date_' . $bookingpress_new_version, current_time('mysql'));

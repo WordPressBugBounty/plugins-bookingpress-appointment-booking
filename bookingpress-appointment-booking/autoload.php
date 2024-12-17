@@ -68,6 +68,32 @@ if (! is_dir($bookingpress_upload_css_dir) ) {
 define('BOOKINGPRESS_UPLOAD_CSS_DIR', $bookingpress_upload_css_dir);
 define('BOOKINGPRESS_UPLOAD_CSS_URL', $bookingpress_upload_css_url);
 
+$upload_dir = wp_upload_dir(); // Get uploads directory info
+$exported_folder_path = $upload_dir['basedir'] . '/bookingpress_export_records';
+if (!file_exists($exported_folder_path)) {
+    wp_mkdir_p($exported_folder_path);
+
+}
+
+if( !file_exists( $exported_folder_path.'/index.php') ){
+    $file_content = "<?php\n //silence is golden";
+    $file_name = 'index.php';
+    file_put_contents( $exported_folder_path.'/'.$file_name, $file_content );
+}
+
+$import_folder_path = $upload_dir['basedir'] . '/bookingpress_import_records';
+if (!file_exists($import_folder_path)) {
+    wp_mkdir_p($import_folder_path);
+
+}
+
+if( !file_exists( $import_folder_path .'/index.php') ){
+    $file_content = "<?php\n //silence is golden";
+    $file_name = 'index.php';
+    
+    file_put_contents( $import_folder_path.'/'.$file_name, $file_content );
+}
+
 global $bookingpress_user_status, $bookingpress_user_type;
 $bookingpress_user_status = array(
     '1' => esc_html__('Active', 'bookingpress-appointment-booking'),
@@ -82,7 +108,7 @@ $bookingpress_user_type = array(
 );
 
 global $bookingpress_version;
-$bookingpress_version = '1.1.22';
+$bookingpress_version = '1.1.23';
 define('BOOKINGPRESS_VERSION', $bookingpress_version);
 
 global $bookingpress_ajaxurl;
