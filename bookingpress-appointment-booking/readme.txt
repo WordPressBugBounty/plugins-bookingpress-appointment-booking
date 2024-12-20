@@ -5,7 +5,7 @@ Donate link: https://bookingpressplugin.com/
 Requires at least: 5.3.0
 Tested up to: 6.7.1
 Requires PHP: 5.6
-Stable tag: 1.1.23
+Stable tag: 1.1.24
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -219,6 +219,9 @@ Please follow the steps for installation:
 13. BookingPress - General Settings
 
 == Changelog ==
+
+= 1.1.24 =
+* Minor bug fixes
 
 = 1.1.23 =
 * Minor bug fixes

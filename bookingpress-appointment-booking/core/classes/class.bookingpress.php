@@ -74,7 +74,6 @@ if (! class_exists('BookingPress') ) {
             add_action('wp_footer', array( $this, 'set_front_js'), 1);
 
             add_filter('plugin_action_links', array( $this, 'bookingpress_plugin_action_links' ), 10, 2);
-            add_action('admin_enqueue_scripts', array( $this, 'set_global_javascript_variables' ), 10);
 
             if (! function_exists('is_plugin_active') ) {
                 include ABSPATH . '/wp-admin/includes/plugin.php';
@@ -2014,7 +2013,7 @@ if (! class_exists('BookingPress') ) {
         {
             global $bookingpress_version;
             $bookingpress_old_version = get_option('bookingpress_version', true);
-            if (version_compare($bookingpress_old_version, '1.1.23', '<') ) {
+            if (version_compare($bookingpress_old_version, '1.1.24', '<') ) {
                 $bookingpress_load_upgrade_file = BOOKINGPRESS_VIEWS_DIR . '/upgrade_latest_data.php';
                 include $bookingpress_load_upgrade_file;
                 $this->bookingpress_send_anonymous_data_cron();
@@ -4610,7 +4609,8 @@ if (! class_exists('BookingPress') ) {
         {
             global $bookingpress_slugs;
 
-            echo "<style type='text/css'>#toplevel_page_bookingpress .wp-menu-image img, #toplevel_page_bookingpress_wizard .wp-menu-image img, #toplevel_page_bookingpress_lite_wizard .wp-menu-image img{ padding: 0 !important; opacity: 1 !important; width: 36px !important; }</style>";
+            wp_register_style('bookingpress_admin_custom_css', BOOKINGPRESS_URL . '/css/bookingpress_admin_custom.css', array(), BOOKINGPRESS_VERSION);
+            wp_enqueue_style('bookingpress_admin_custom_css');
 
             /* Plugin Style */
             wp_register_style('bookingpress_element_css', BOOKINGPRESS_URL . '/css/bookingpress_element_theme.css', array(), BOOKINGPRESS_VERSION);
@@ -4914,6 +4914,10 @@ if (! class_exists('BookingPress') ) {
             wp_localize_script( 'bookingpress_admin_custom_js', 'bpa_custom_js_data', array(
                 'bookingpress_ajax_url' => admin_url('admin-ajax.php')
             ) );
+
+            $custom_inline_script = '__BOOKINGPRESSIMAGEURL = "' . esc_url(BOOKINGPRESS_IMAGES_URL) . '"';
+            
+            wp_add_inline_script( 'bookingpress-appointment-booking-booking-form-editor-script', $custom_inline_script, 'before' );
             
             wp_register_script('bookingpress_admin_js', BOOKINGPRESS_URL . '/js/bookingpress_vue.min.js', array(), BOOKINGPRESS_VERSION);
 
@@ -4992,19 +4996,6 @@ if (! class_exists('BookingPress') ) {
             wp_localize_script('bookingpress_admin_custom_js', 'appoint_ajax_obj', array( 'ajax_url' => admin_url('admin-ajax.php') ));
 
         }
-                
-        /**
-         * Load global Javascript variables
-         *
-         * @return void
-         */
-        function set_global_javascript_variables()
-        {
-            echo '<script type="text/javascript" data-cfasync="false">';
-            echo '__BOOKINGPRESSIMAGEURL = "' . esc_url(BOOKINGPRESS_IMAGES_URL) . '";';
-            echo '</script>';
-        }
-
                 
         /**
          * Hide update notices in plugins page

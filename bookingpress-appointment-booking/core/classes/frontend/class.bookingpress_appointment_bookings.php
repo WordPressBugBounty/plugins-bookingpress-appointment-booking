@@ -1819,6 +1819,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
 				$bpa_check_datetime = $dt->format( 'Y-m-d H:i:s');
 				$front_timings_data = $bookingpress_appointment_bookings->bookingpress_retrieve_timeslots( $bpa_check_date, true, false, false, $total_booked_appiontments );
 
+
                 $front_timings_data_combined = array_merge(
 					$front_timings_data['morning_time'],
 					$front_timings_data['afternoon_time'],
@@ -4527,7 +4528,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                     $booked_appointment_end_date = ( !empty( $booked_appointment_data['bookingpress_appointment_end_date'] ) && '0000-00-00' != $booked_appointment_data['bookingpress_appointment_end_date'] ) ? $booked_appointment_data['bookingpress_appointment_end_date'] : $booked_appointment_start_date;
 
                     if( '00:00:00' == $booked_appointment_end_time ){
-                        $booked_appointment_end_time = '24:00:00';
+                        $booked_appointment_end_time = apply_filters( 'bookingpress_modify_booked_end_time','24:00:00', $booked_appointment_data );
                     }
 
                     $booked_appointment_start_datetime = $booked_appointment_start_date.' ' . $booked_appointment_start_time;
@@ -4543,8 +4544,6 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
 
                         
                         if( ( $booked_appointment_start_datetime >= $current_time_start_datetime && $booked_appointment_end_datetime <= $current_time_end_datetime ) || ( $booked_appointment_start_datetime < $current_time_end_datetime && $booked_appointment_end_datetime > $current_time_start_datetime ) ){
-
-                            //echo $booked_appointment_start_datetime. ' -- ' . $booked_appointment_end_datetime. ' -- ' . $current_time_start_datetime . ' --- ' . $current_time_end_datetime.' ----<br/><br/>';
                             
                             $bookingpress_single_time_slot_data = $time_slot_data;
 
@@ -4570,7 +4569,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
 
                             /* Share capacity betweenslot issue fixed start */                                                           
                             $bookingpress_reduce_capacity = true;
-                            if( 'true' == $shared_quantity ){    
+                            if( 'true' == $shared_quantity ){
                                 
                                 $max_capacity = (isset($time_slot_data['max_capacity']))?$time_slot_data['max_capacity']:1;
 
@@ -4610,7 +4609,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                                 }                                
                                 $service_temp_timings[$sk]['booked_timeslot'][] = array('start_time'=>$booked_appointment_start_time,'end_time'=>$booked_appointment_end_time,'capacity_count'=>$capacity_count);
                                 if(!$bookingpress_reduce_capacity){
-                                    $service_timings[ $sk ] = $bookingpress_single_time_slot_data;                                    
+                                    $service_timings[ $sk ] = $bookingpress_single_time_slot_data;
                                     continue;
                                 }
 

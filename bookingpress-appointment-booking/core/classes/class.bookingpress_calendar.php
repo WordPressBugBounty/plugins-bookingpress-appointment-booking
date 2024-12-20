@@ -718,8 +718,7 @@ if (! class_exists('bookingpress_calendar') ) {
                             $appointment_details['bookingpress_appointment_status']            = $bookingpress_appointment_status;
                             if(!empty($appointment_details['bookingpress_paid_amount'])){
                                 $appointment_details['bookingpress_paid_amount']                   = $service_amount;
-                            }   
-                            
+                            }
                             $appointment_details = apply_filters('bookingpress_modify_appointment_booking_fields', $appointment_details, $appointment_details, $bookingpress_appointment_data);
 
                             do_action( 'bookingpress_other_debug_log_entry', 'appointment_debug_logs', 'Backend modified existing appointment data', 'bookingpress_admin_add_update_appointment', $appointment_details, $bookingpress_other_debug_log_id );
