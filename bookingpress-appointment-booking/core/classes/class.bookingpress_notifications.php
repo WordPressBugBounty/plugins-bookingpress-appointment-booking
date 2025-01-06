@@ -191,7 +191,7 @@ class bookingpress_notifications Extends BookingPress_Core
 
                     axios.post( appoint_ajax_obj.ajax_url, Qs.stringify( bookingpress_get_notification_post_data ) )
                     .then( function (response) {
-                        const bookingpress_return_notification_data = response.data.return_data
+                        const bookingpress_return_notification_data = response.data.return_data;
                         vm.bookingpress_reset_default_email_notification()
                         if(response.data.variant == 'success' && bookingpress_return_notification_data.length != 0)
                         {

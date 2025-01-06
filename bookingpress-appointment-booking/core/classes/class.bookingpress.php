@@ -2013,7 +2013,7 @@ if (! class_exists('BookingPress') ) {
         {
             global $bookingpress_version;
             $bookingpress_old_version = get_option('bookingpress_version', true);
-            if (version_compare($bookingpress_old_version, '1.1.24', '<') ) {
+            if (version_compare($bookingpress_old_version, '1.1.25', '<') ) {
                 $bookingpress_load_upgrade_file = BOOKINGPRESS_VIEWS_DIR . '/upgrade_latest_data.php';
                 include $bookingpress_load_upgrade_file;
                 $this->bookingpress_send_anonymous_data_cron();
@@ -2228,6 +2228,11 @@ if (! class_exists('BookingPress') ) {
                         },
                         mounted() {
                             this.bpa_set_read_more_link();
+                            let admin_menubar = document.getElementById('adminmenuwrap');
+							
+							if( null != admin_menubar && admin_menubar.offsetWidth > 160 ){
+								document.body.classList.add('bpa_menu_large_width');
+							}
                             <?php do_action('bookingpress_admin_vue_on_load_script'); ?>                            
                             document.onreadystatechange = () => { 
                                 if (document.readyState == "complete") {

@@ -214,6 +214,12 @@ if (! class_exists('bookingpress_dashboard') ) {
                         } else if ($appointment_new_status == '4' && !empty( $appointment_update_id ) ) {
                             $appointment_status_type = 'Appointment Rejected';
                         }
+
+                        
+                        $bookingpress_entry_id  = isset($booked_appointment_details['bookingpress_entry_id']) ? $booked_appointment_details['bookingpress_entry_id'] : 0;
+
+                        do_action( 'bookingpress_before_send_upcoming_appointment_status_notification', $appointment_update_id, $bookingpress_entry_id );
+
                         $this->bookingpress_send_email_notification_for_change_status_func( $appointment_status_type, $appointment_update_id, $customer_email );
                     } else {
                         if( wp_next_scheduled ( 'bookingpress_send_email_for_change_status' ) ){
@@ -473,8 +479,33 @@ if (! class_exists('bookingpress_dashboard') ) {
                         $bookingpress_sortable_duration_val = $service_duration;
                     }
 
+                    if( !empty( $get_appointment['bookingpress_appointment_end_date'] ) && '0000-00-00' != $get_appointment['bookingpress_appointment_end_date'] ){
+                        $appointment_end_date = $get_appointment['bookingpress_appointment_end_date'];
+                    } else {
+                        $appointment_end_date = $get_appointment['bookingpress_appointment_date'];
+                    }
+
                     $bookingpress_appointment_start_datetime = $appointment_date_time;
                     $bookingpress_appointment_end_datetime = $get_appointment['bookingpress_appointment_date'].' '. $get_appointment['bookingpress_appointment_end_time'];
+
+                    if( $appointment_end_date > $get_appointment['bookingpress_appointment_date'] && '00:00:00' != $get_appointment['bookingpress_appointment_end_time'] ){
+
+                        $end_time_data = explode( ':', $get_appointment['bookingpress_appointment_end_time'] );
+
+                        $end_hour = $end_time_data[0];
+                        $end_mins = $end_time_data[1];
+                        $end_sec = $end_time_data[2];
+
+                        if( $end_hour >= 24 ){
+                            $bookingpress_appointment_end_datetime = date('Y-m-d H:i:s', strtotime( $get_appointment['bookingpress_appointment_date'] .' 00:00:00 +'.$end_hour.' hours '.$end_mins.' minutes '.$end_sec.' seconds' ) );
+                        } else {
+                            $bookingpress_appointment_end_datetime = $appointment_end_date.' '.$get_appointment['bookingpress_appointment_end_time'];
+                        }
+
+                    } else {
+                        $bookingpress_appointment_end_datetime = $appointment_end_date.' '.$get_appointment['bookingpress_appointment_end_time'];
+                    }
+
                     if($service_duration_unit != 'd') {
                         $service_duration = $bookingpress_appointment->bookingpress_get_appointment_duration($bookingpress_appointment_start_datetime, $bookingpress_appointment_end_datetime);
                     } else {
@@ -1376,7 +1407,8 @@ if (! class_exists('bookingpress_dashboard') ) {
                         if (valid) {
                         vm2.is_disabled = true
                         vm2.is_display_save_loader = '1'    
-                        var postData = { action:'bookingpress_save_appointment_booking', appointment_data: vm2.appointment_formdata,_wpnonce:'<?php echo esc_html(wp_create_nonce('bpa_wp_nonce')); ?>' };
+                        var postData = { action:'bookingpress_save_appointment_booking', _wpnonce:'<?php echo esc_html(wp_create_nonce('bpa_wp_nonce')); ?>' };
+                        postData.appointment_data = JSON.stringify(vm2.appointment_formdata);
                         axios.post( appoint_ajax_obj.ajax_url, Qs.stringify( postData ) )
                         .then(function(response){
                             vm2.is_disabled = false                            

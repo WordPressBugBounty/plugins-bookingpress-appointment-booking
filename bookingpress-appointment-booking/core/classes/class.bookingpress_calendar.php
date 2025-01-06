@@ -559,6 +559,7 @@ if (! class_exists('bookingpress_calendar') ) {
                 if(!empty($bookingpress_appointment_booked_date)){
                     $bookingpress_appointment_booked_date = date('Y-m-d', strtotime($bookingpress_appointment_booked_date));
                 }
+                $bookingpress_appointment_booked_end_date = !empty( $bookingpress_appointment_data['appointment_booked_end_date'] ) ? sanitize_text_field( $bookingpress_appointment_data['appointment_booked_end_date'] ) : $bookingpress_appointment_booked_date;
                 $bookingpress_appointment_booked_time          = ! empty($bookingpress_appointment_data['appointment_booked_time']) ? sanitize_text_field($bookingpress_appointment_data['appointment_booked_time']) : '';
                 $bookingpress_appointment_end_time          = ! empty($bookingpress_appointment_data['appointment_booked_end_time']) ? sanitize_text_field($bookingpress_appointment_data['appointment_booked_end_time']) : '';
                 $bookingpress_appointment_internal_note        = ! empty($bookingpress_appointment_data['appointment_internal_note']) ? trim(sanitize_textarea_field($bookingpress_appointment_data['appointment_internal_note'])) : '';
@@ -595,6 +596,7 @@ if (! class_exists('bookingpress_calendar') ) {
 
                         $appointment_booked_date = (isset($bookingpress_appointment_data['appointment_booked_date']))?$bookingpress_appointment_data['appointment_booked_date']:'';
                         $appointment_booked_end_date = (isset($bookingpress_appointment_data['appointment_booked_end_date']))?$bookingpress_appointment_data['appointment_booked_end_date']:'';
+                        $bookingpress_appointment_booked_end_date = $appointment_booked_end_date;
 
                         $date1 = new DateTime($appointment_booked_date);
                         $date2 = new DateTime($appointment_booked_end_date);                                                    
@@ -645,8 +647,8 @@ if (! class_exists('bookingpress_calendar') ) {
                         $bookingpress_appointment_end_time = !empty($bookingpress_appointment_end_time_arr) ? $bookingpress_appointment_end_time_arr['service_end_time'] : '';
                     }
                     
+                    $is_appointment_already_booked = 0;
                     if (! empty($bookingpress_update_id) ) {                        
-                        $is_appointment_already_booked = 0;
                         $appointment_details = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$tbl_bookingpress_appointment_bookings} WHERE bookingpress_appointment_booking_id = %d", $bookingpress_update_id), ARRAY_A); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Reason: $tbl_bookingpress_customers is table name defined globally. False Positive alarm
 
                         
@@ -711,6 +713,7 @@ if (! class_exists('bookingpress_calendar') ) {
                             $appointment_details['bookingpress_service_duration_val']          = $service_duration_val;
                             $appointment_details['bookingpress_service_duration_unit']         = $service_duration_unit;
                             $appointment_details['bookingpress_appointment_date']              = $bookingpress_appointment_booked_date;
+                            $appointment_details['bookingpress_appointment_end_date']          = $bookingpress_appointment_booked_end_date;
                             $appointment_details['bookingpress_appointment_time']              = $bookingpress_appointment_booked_time;
                             $appointment_details['bookingpress_appointment_end_time']          = $bookingpress_appointment_end_time;
                             $appointment_details['bookingpress_appointment_internal_note']     = $bookingpress_appointment_internal_note;

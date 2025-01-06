@@ -1804,7 +1804,23 @@ if (! class_exists('bookingpress_appointment') ) {
                     
 
                     $bookingpress_appointment_start_datetime = $get_appointment['bookingpress_appointment_date'].' '.$get_appointment['bookingpress_appointment_time'];
-                    $bookingpress_appointment_end_datetime = $appointment_end_date.' '.$get_appointment['bookingpress_appointment_end_time'];
+                    if( $appointment_end_date > $get_appointment['bookingpress_appointment_date'] && '00:00:00' != $get_appointment['bookingpress_appointment_end_time'] ){
+
+                        $end_time_data = explode( ':', $get_appointment['bookingpress_appointment_end_time'] );
+
+                        $end_hour = $end_time_data[0];
+                        $end_mins = $end_time_data[1];
+                        $end_sec = $end_time_data[2];
+
+                        if( $end_hour >= 24 ){
+                            $bookingpress_appointment_end_datetime = date('Y-m-d H:i:s', strtotime( $get_appointment['bookingpress_appointment_date'] .' 00:00:00 +'.$end_hour.' hours '.$end_mins.' minutes '.$end_sec.' seconds' ) );
+                        } else {
+                            $bookingpress_appointment_end_datetime = $appointment_end_date.' '.$get_appointment['bookingpress_appointment_end_time'];
+                        }
+
+                    } else {
+                        $bookingpress_appointment_end_datetime = $appointment_end_date.' '.$get_appointment['bookingpress_appointment_end_time'];
+                    }
 
                     if($service_duration_unit != 'd') {
                         $service_duration = $this->bookingpress_get_appointment_duration($bookingpress_appointment_start_datetime, $bookingpress_appointment_end_datetime);
