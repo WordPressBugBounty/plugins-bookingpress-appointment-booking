@@ -1451,8 +1451,7 @@ if (! class_exists('bookingpress_settings') ) {
                 );
             }
 
-            echo wp_json_encode($response);
-            exit();
+            wp_send_json( $response );
         }
         
         /**
@@ -3506,8 +3505,7 @@ if (! class_exists('bookingpress_settings') ) {
             $response['variant']             = 'success';
 
             if(!empty($_REQUEST['action']) &&  $_REQUEST['action'] == 'bookingpress_get_default_work_hours_details') { 
-                echo wp_json_encode($response);
-                exit();
+                wp_send_json($response);
             } else {
                 return $response;
             }

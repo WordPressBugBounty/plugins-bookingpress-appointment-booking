@@ -94,21 +94,8 @@ if( !file_exists( $import_folder_path .'/index.php') ){
     file_put_contents( $import_folder_path.'/'.$file_name, $file_content );
 }
 
-global $bookingpress_user_status, $bookingpress_user_type;
-$bookingpress_user_status = array(
-    '1' => esc_html__('Active', 'bookingpress-appointment-booking'),
-    '2' => esc_html__('Inactive', 'bookingpress-appointment-booking'),
-    '3' => esc_html__('Pending', 'bookingpress-appointment-booking'),
-    '4' => esc_html__('Terminated', 'bookingpress-appointment-booking'),
-);
-
-$bookingpress_user_type = array(
-    '1' => esc_html__('Employee', 'bookingpress-appointment-booking'),
-    '2' => esc_html__('Customer', 'bookingpress-appointment-booking'),
-);
-
 global $bookingpress_version;
-$bookingpress_version = '1.1.25';
+$bookingpress_version = '1.1.26';
 define('BOOKINGPRESS_VERSION', $bookingpress_version);
 
 global $bookingpress_ajaxurl;

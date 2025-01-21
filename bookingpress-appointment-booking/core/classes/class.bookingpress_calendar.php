@@ -102,6 +102,7 @@ if (! class_exists('bookingpress_calendar') ) {
             $appointment_data = array();
             if (! empty($posted_data['bookingpress_sel_appointment_date']) ) { // phpcs:ignore WordPress.Security.NonceVerification
                 $appointment_sel_data = $posted_data['bookingpress_sel_appointment_date'];
+                $appointment_sel_end_date = (!empty( $posted_data['bookingpress_sel_appointment_end_date'] ) && '0000-00-00' != $posted_data['bookingpress_sel_appointment_end_date'] ) ? $posted_data['bookingpress_sel_appointment_end_date'] : $appointment_sel_data;
                 $where_query = '';
                 $slot_start_time = isset($posted_data['bookingpress_appointment_start_time']) ? $posted_data['bookingpress_appointment_start_time'] : '';
                 $slot_end_time = isset($posted_data['bookingpress_appointment_end_time']) ? $posted_data['bookingpress_appointment_end_time'] : '';
@@ -118,6 +119,11 @@ if (! class_exists('bookingpress_calendar') ) {
 
                 $appointment_columns = isset($appointment_query_dynamic_arr['appointment_columns']) ? $appointment_query_dynamic_arr['appointment_columns'] : '';
                 $where_query .= isset($appointment_query_dynamic_arr['where_query']) ? $appointment_query_dynamic_arr['where_query'] : '';
+
+                if( $BookingPress->bpa_is_pro_active() ){
+                    $where_query .= $wpdb->prepare( ' AND bookingpress_appointment_end_date = %s ', $appointment_sel_end_date );
+                }
+
                 $total_booked_appiontments_data = $wpdb->get_results( $wpdb->prepare( "SELECT services.bookingpress_service_name, cust.bookingpress_user_name, cust.bookingpress_user_firstname, cust.bookingpress_user_lastname, cust.bookingpress_user_email, cust.bookingpress_user_phone, cust.bookingpress_user_country_dial_code, appointment.bookingpress_appointment_time, appointment.bookingpress_appointment_end_time, appointment.bookingpress_appointment_booking_id, appointment.bookingpress_booking_id, appointment.bookingpress_appointment_date, appointment.bookingpress_appointment_status,appointment.bookingpress_customer_firstname, appointment.bookingpress_customer_lastname, appointment.bookingpress_customer_name, appointment.bookingpress_username {$appointment_columns} FROM {$tbl_bookingpress_appointment_bookings} appointment JOIN {$tbl_bookingpress_customers} cust ON appointment.bookingpress_customer_id=cust.bookingpress_customer_id JOIN {$tbl_bookingpress_services} services ON appointment.bookingpress_service_id=services.bookingpress_service_id WHERE appointment.bookingpress_appointment_date=%s AND (appointment.bookingpress_appointment_status='1' OR appointment.bookingpress_appointment_status='2' ) $where_query ORDER BY appointment.bookingpress_appointment_date ASC, appointment.bookingpress_appointment_time ASC", $appointment_sel_data), ARRAY_A ); //phpcs:ignore
 
                 $global_data = $bookingpress_global_options->bookingpress_global_options();
@@ -126,11 +132,12 @@ if (! class_exists('bookingpress_calendar') ) {
                     foreach($total_booked_appiontments_data as $index=> $appointment_data) {
                         $total_booked_appiontments_data[$index]['bookingpress_service_name'] = isset($appointment_data['bookingpress_service_name']) ? stripslashes_deep($appointment_data['bookingpress_service_name']) : '';;
                         $formated_date = date($default_date_format,strtotime($appointment_data['bookingpress_appointment_date']));
+                        $formated_end_date = ( !empty( $appointment_data['bookingpress_appointment_end_date'] ) && '0000-00-00' != $appointment_data['bookingpress_appointment_end_date'] ) ? date($default_date_format, strtotime( $appointment_data['bookingpress_appointment_end_date'] ) ) : $formated_date;
                         $selected_end_time = $appointment_data['bookingpress_appointment_end_time'];
                         $start_time = date($global_data['wp_default_time_format'], strtotime($appointment_data['bookingpress_appointment_time']));
-                        if($selected_end_time == "00:00:00"){
+                        /* if($selected_end_time == "00:00:00"){
                             $selected_end_time = "23:59:59";
-                        }
+                        } */
                         
                         if(isset($total_booked_appiontments_data[$index]['bookingpress_user_phone']) && !empty($total_booked_appiontments_data[$index]['bookingpress_user_phone']) && isset($total_booked_appiontments_data[$index]['bookingpress_user_country_dial_code']) && !empty($total_booked_appiontments_data[$index]['bookingpress_user_country_dial_code'])){
                             $total_booked_appiontments_data[$index]['bookingpress_user_phone'] = '+'.$total_booked_appiontments_data[$index]['bookingpress_user_country_dial_code'].' '.$total_booked_appiontments_data[$index]['bookingpress_user_phone'];
@@ -140,6 +147,7 @@ if (! class_exists('bookingpress_calendar') ) {
                         $total_booked_appiontments_data[$index]['bookingpress_appointment_time'] = $start_time;
                         $total_booked_appiontments_data[$index]['bookingpress_appointment_end_time'] = $end_time;
                         $total_booked_appiontments_data[$index]['bookingpress_appointment_date'] = $formated_date;
+                        $total_booked_appointments_data[$index]['bookingpress_appointment_end_date'] = $formated_end_date;
                         $bookingpress_cust_fnm = isset($appointment_data['bookingpress_customer_firstname']) ? stripslashes_deep($appointment_data['bookingpress_customer_firstname']) : '';
                         $bookingpress_cust_lnm = isset($appointment_data['bookingpress_customer_lastname']) ? stripslashes_deep($appointment_data['bookingpress_customer_lastname']) : '';
                         $bookingpress_cust_fullnm = isset($appointment_data['bookingpress_customer_name']) ? $appointment_data['bookingpress_customer_name'] : '';
@@ -414,6 +422,7 @@ if (! class_exists('bookingpress_calendar') ) {
             foreach ( $bookings_data as $bookings_key => $bookings_val ) {
 
                 $bookingpress_booking_date = date('Y-m-d', strtotime($bookings_val['bookingpress_appointment_date']));   
+                $bookingpress_booking_end_date = (!empty( $bookings_val['bookingpress_appointment_end_date'] ) && '0000-00-00' != $bookings_val['bookingpress_appointment_end_date'] ) ? date('Y-m-d', strtotime( $bookings_val['bookingpress_appointment_end_date'] ) ) : $bookingpress_booking_date;
                 $bookingpress_booking_end_date = $bookingpress_booking_date;             
                 $service_start_time    = ! empty($bookings_val['bookingpress_appointment_time']) ? $bookings_val['bookingpress_appointment_time'] : '';
                 $service_end_time      = ! empty($bookings_val['bookingpress_appointment_end_time']) ? $bookings_val['bookingpress_appointment_end_time'] : '';

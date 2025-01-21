@@ -1673,7 +1673,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
 
             $bookingpress_start_date = date('Y-m-d', current_time('timestamp') );
 
-            $bookingpress_selected_service= !empty($_REQUEST['selected_service']) ? intval($_REQUEST['selected_service']) : '';
+            $bookingpress_selected_service = !empty($_REQUEST['selected_service']) ? intval($_REQUEST['selected_service']) : '';
         
             if(empty($bookingpress_selected_service)){
                 $bookingpress_selected_service = $bookingpress_appointment_data['selected_service'];
@@ -1682,7 +1682,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             /** Modify get available time of booking if the service expiration time is set */
             $get_period_available_for_booking = apply_filters( 'bookingpress_modify_max_available_time_for_booking', $get_period_available_for_booking, $bookingpress_start_date, $bookingpress_selected_service );
 
-            $bookingpress_max_date = date('Y-m-d', strtotime( '+' . $get_period_available_for_booking . ' days') );
+            $bookingpress_max_date = date('Y-m-d', strtotime( $bookingpress_start_date . ' +' . $get_period_available_for_booking . ' days') );
 
             $max_service_capacity = 1;
             $max_service_capacity = apply_filters( 'bookingpress_retrieve_capacity', $max_service_capacity, $bookingpress_selected_service );
@@ -1749,7 +1749,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             $max_end_date = $bpa_end_date->format('Y-m-d');
 			
 			$bpa_interval = DateInterval::createFromDateString('1 day');
-			$period = new DatePeriod($bpa_begin_date, $bpa_interval, $bpa_end_date);            
+			$period = new DatePeriod($bpa_begin_date, $bpa_interval, $bpa_end_date);
 
 			$working_hour_details = [];
             $working_hour_timing_token = [];
@@ -1935,6 +1935,11 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             
             if( true == $return ){
                 return $response;
+            }
+
+            if( '' == $selected_date && empty( $working_hour_details ) ){
+                $response['selected_date'] = $max_end_date;
+                $response['pre_selected_date'] = true;
             }
             
             $response['max_capacity_capacity'] = $max_service_capacity;
@@ -4478,6 +4483,8 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             } else {
                 $service_timings = $service_timings_data['service_timings'];
             }
+
+            
             
             if( true == $check_only_one_slot ){
                 if( 0 < count( $service_timings ) ){
@@ -4520,6 +4527,8 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             
             $service_temp_timings = $service_timings;
 
+            
+
             if( !empty( $total_booked_appiontments ) && !empty( $service_timings ) ){
                 foreach( $total_booked_appiontments as $booked_appointment_data ){
                     $total_guests = 0;
@@ -4550,7 +4559,6 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                         $current_time_start_datetime = $time_slot_data['store_service_date'] . ' ' . $current_time_start;
                         $current_time_end_datetime = ( !empty( $time_slot_data['selected_end_date'] ) && '0000-00-00' != $time_slot_data['selected_end_date'] ) ? ( $time_slot_data['selected_end_date'] . ' '. $current_time_end ) : ( $time_slot_data['store_service_date'] . ' ' . $current_time_end );
 
-                        
                         if( ( $booked_appointment_start_datetime >= $current_time_start_datetime && $booked_appointment_end_datetime <= $current_time_end_datetime ) || ( $booked_appointment_start_datetime < $current_time_end_datetime && $booked_appointment_end_datetime > $current_time_start_datetime ) ){
                             
                             $bookingpress_single_time_slot_data = $time_slot_data;
@@ -4673,6 +4681,9 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                                         $is_booked_flag = true;
                                     }
                                     $service_timings[ $sk ]['is_booked'] = apply_filters( 'bookingpress_is_slot_booked_with_share_timeslot', $is_booked_flag, $selected_service_id, $booked_appointment_data );
+                                    if( true == $service_timings[ $sk ]['is_booked'] ){
+                                        unset( $service_timings[ $sk ] );
+                                    }
                                 }
                             }
                             $service_timings[ $sk ]['is_booked_appointment'] = true;
@@ -4695,6 +4706,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             $service_timings = apply_filters( 'bookingpress_buffer_calculations', $service_timings, $total_booked_appiontments, $selected_service_id, $shared_quantity, $booked_timing_keys );
 
             $service_timings = array_values( $service_timings );
+            
 
             if( true == $check_for_whole_days ){
                 $is_available = false;
@@ -6791,7 +6803,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                 $bookingpress_calendar_html = '<div id="bpa-front-module-calendar-integration">';
                     $bookingpress_calendar_html     .= '<div class="bpa-front-module--atc-wrapper">';					
                                 $bookingpress_calendar_html .= '								
-                                        <div v-for="item in bookingpress_calendar_list" :class="\'bpa-front-module--atc__item bpa-fm--atc__\'+item.value" style="margin:0px '.$button_spacing.'px '.$button_spacing.'px 0px">
+                                        <div v-for="item in bookingpress_calendar_list" :class="\'bpa-front-module--atc__item bpa-fm--atc__\'+item.value" style="margin:0px 12px 12px 0px">
                                             <el-button class="bpa-front-btn bpa-front-btn__medium bpa-front-btn--full-width" id="bookingpress_ical_calendar" v-if="item.value == \'ical_calendar\'">
                                                 <span class="bpa-thank-you-add-cal">
                                                     <svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -8058,7 +8070,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
 			},
 			displayCalendar(){
 				const vm = this;
-                if( "" == vm.appointment_step_form_data.selected_date ){
+                if( "" == vm.appointment_step_form_data.selected_date || ( "undefined" != typeof vm.v_calendar_available_dates && 1 > vm.v_calendar_available_dates.length ) ){
                     return false;
                 }
 				vm.displayResponsiveCalendar = "1";
@@ -8504,12 +8516,12 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                     vm.v_calendar_available_dates.forEach( function( i,e ){
                         v_available_dates_only.push( i.split(" ")[0] );
                     });
-                    if( !v_available_dates_only.includes( selectedDate ) && wh_details.selected_date != selectedDate ){
+                    if( !v_available_dates_only.includes( selectedDate ) && wh_details.selected_date != selectedDate && wh_details.selected_date != "" ){
                         selectedDate = wh_details.selected_date;
                     }
                     vm.v_calendar_available_only_date = v_available_dates_only;
 
-                    if( "undefined" != typeof selectedDate ){
+                    if( "undefined" != typeof selectedDate && "" != selectedDate ){
                         (function( $ref_ ){
                             setTimeout(function(){
                                 vm.appointment_step_form_data.selected_date = selectedDate;
