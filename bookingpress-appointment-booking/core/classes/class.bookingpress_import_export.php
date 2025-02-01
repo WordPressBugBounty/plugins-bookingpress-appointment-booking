@@ -7,8 +7,6 @@ if (! class_exists('bookingpress_import_export') ) {
     {
         function __construct(){
 
-            global $export_import_data_key_name;
-            $export_import_data_key_name = $this->get_export_data_key_name_arr();
 
             add_filter('bookingpress_add_setting_dynamic_data_fields',array($this,'bookingpress_add_setting_dynamic_data_fields_func'));             
             add_action('bookingpress_add_setting_dynamic_vue_methods',array($this,'bookingpress_add_setting_dynamic_vue_methods_func'));
@@ -3759,7 +3757,7 @@ if (! class_exists('bookingpress_import_export') ) {
         }
 
         function get_import_log_data(){
-            global $BookingPress,$tbl_bookingpress_import_data_log,$tbl_bookingpress_import_detail_log,$wpdb,$export_import_data_key_name;
+            global $BookingPress,$tbl_bookingpress_import_data_log,$tbl_bookingpress_import_detail_log,$wpdb;
             $export_import_data_key_name = $this->get_export_data_key_name_arr();
             $bookingpress_import_log_data = array();
             $bookingperss_continue_import = $wpdb->get_row("SELECT import_id,import_complete FROM {$tbl_bookingpress_import_data_log} Order by import_id DESC",ARRAY_A); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared --Reason: $tbl_bookingpress_export_data_log is a table name. false alarm
@@ -3792,7 +3790,7 @@ if (! class_exists('bookingpress_import_export') ) {
         }
 
         function get_export_log_data(){
-            global $BookingPress,$tbl_bookingpress_export_data_log,$tbl_bookingpress_export_data_log_detail,$wpdb,$export_import_data_key_name;
+            global $BookingPress,$tbl_bookingpress_export_data_log,$tbl_bookingpress_export_data_log_detail,$wpdb;
             $export_import_data_key_name = $this->get_export_data_key_name_arr();
             $bookingpress_export_log_data = array();
             $bookingperss_continue_export = $wpdb->get_row("SELECT export_id,export_complete FROM {$tbl_bookingpress_export_data_log} Order by export_id DESC",ARRAY_A); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared --Reason: $tbl_bookingpress_export_data_log is a table name. false alarm

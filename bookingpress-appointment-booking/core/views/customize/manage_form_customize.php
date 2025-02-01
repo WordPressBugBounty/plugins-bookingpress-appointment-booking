@@ -1243,21 +1243,19 @@
             <el-col :xs="12" :sm="12" :md="16" :lg="16" :xl="16">
                 <h1 class="bpa-page-heading"><?php esc_html_e('Custom CSS', 'bookingpress-appointment-booking'); ?></h1>
             </el-col>
-            <el-col :xs="12" :sm="12" :md="8" :lg="8" :xl="8">
-                <div class="bpa-hw-right-btn-group">
-                    <el-button class="bpa-btn bpa-btn__medium bpa-btn--primary" @click="bookingpress_save_custom_css()" >                    
-                        <span class="bpa-btn__label"><?php esc_html_e('OK', 'bookingpress-appointment-booking'); ?></span>                        
-                    </el-button> 
-                    <el-button class="bpa-btn bpa-btn__medium" @click="close_custom_css_modal()">
-                        <span><?php esc_html_e('Close', 'bookingpress-appointment-booking'); ?></span>
-                    </el-button>                    
-                </div>
-            </el-col>
         </el-row>
     </div>
     <div class="bpa-dialog-body">
         <div class="bpa-dialog--custom_css_body">
             <el-input type="textarea" :rows="18" class="bpa-form-control" v-model="bookigpress_form_custom_css"/>
+        </div>
+        <div class="bpa-hw-right-btn-group bpa-custom-css-block">
+            <el-button class="bpa-btn bpa-btn__medium bpa-btn--primary" @click="bookingpress_save_custom_css()" >                    
+                <span class="bpa-btn__label"><?php esc_html_e('OK', 'bookingpress-appointment-booking'); ?></span>                        
+            </el-button> 
+            <el-button class="bpa-btn bpa-btn__medium" @click="close_custom_css_modal()">
+                <span><?php esc_html_e('Close', 'bookingpress-appointment-booking'); ?></span>
+            </el-button>                    
         </div>
     </div>    
 </el-dialog>

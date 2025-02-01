@@ -120,9 +120,9 @@ if (! class_exists('bookingpress_calendar') ) {
                 $appointment_columns = isset($appointment_query_dynamic_arr['appointment_columns']) ? $appointment_query_dynamic_arr['appointment_columns'] : '';
                 $where_query .= isset($appointment_query_dynamic_arr['where_query']) ? $appointment_query_dynamic_arr['where_query'] : '';
 
-                if( $BookingPress->bpa_is_pro_active() ){
+                /* if( $BookingPress->bpa_is_pro_active() ){
                     $where_query .= $wpdb->prepare( ' AND bookingpress_appointment_end_date = %s ', $appointment_sel_end_date );
-                }
+                } */
 
                 $total_booked_appiontments_data = $wpdb->get_results( $wpdb->prepare( "SELECT services.bookingpress_service_name, cust.bookingpress_user_name, cust.bookingpress_user_firstname, cust.bookingpress_user_lastname, cust.bookingpress_user_email, cust.bookingpress_user_phone, cust.bookingpress_user_country_dial_code, appointment.bookingpress_appointment_time, appointment.bookingpress_appointment_end_time, appointment.bookingpress_appointment_booking_id, appointment.bookingpress_booking_id, appointment.bookingpress_appointment_date, appointment.bookingpress_appointment_status,appointment.bookingpress_customer_firstname, appointment.bookingpress_customer_lastname, appointment.bookingpress_customer_name, appointment.bookingpress_username {$appointment_columns} FROM {$tbl_bookingpress_appointment_bookings} appointment JOIN {$tbl_bookingpress_customers} cust ON appointment.bookingpress_customer_id=cust.bookingpress_customer_id JOIN {$tbl_bookingpress_services} services ON appointment.bookingpress_service_id=services.bookingpress_service_id WHERE appointment.bookingpress_appointment_date=%s AND (appointment.bookingpress_appointment_status='1' OR appointment.bookingpress_appointment_status='2' ) $where_query ORDER BY appointment.bookingpress_appointment_date ASC, appointment.bookingpress_appointment_time ASC", $appointment_sel_data), ARRAY_A ); //phpcs:ignore
 

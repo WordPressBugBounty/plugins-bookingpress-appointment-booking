@@ -1690,34 +1690,49 @@ if (! class_exists('bookingpress_appointment') ) {
                             $bookingpress_customer_ids[] = $item['bookingpress_customer_id'];
                         }
                         $bookingpress_search_user_id      = implode(',', $bookingpress_customer_ids);
-                        $bookingpress_search_query_where .= "AND (bookingpress_customer_id IN ({$bookingpress_search_user_id}))";
+                        $search_query_where = ' AND (bookingpress_customer_id IN (';
+                        $search_query_where .= rtrim( str_repeat( '%d,', count( $bookingpress_customer_ids ) ), ',' ). ')';
+                        array_unshift( $bookingpress_customer_ids, $search_query_where );
+                        $search_query_where_str = call_user_func_array( array( $wpdb, 'prepare' ), $bookingpress_customer_ids  );
+
+                        $bookingpress_search_query_where .= $search_query_where_str;// "AND (bookingpress_customer_id IN ({$bookingpress_search_user_id}))";
                     } else {
-                        $bookingpress_search_query_where .= "AND (bookingpress_service_name LIKE '%{$bookingpress_search_string}%')";
+                        $bookingpress_search_query_where .= $wpdb->prepare( "AND ( bookingpress_service_name LIKE %s", "%{$bookingpress_search_string}%" );//"AND (bookingpress_service_name LIKE '%{$bookingpress_search_string}%')";
                     }
                 }
                 if (! empty($bookingpress_search_data['selected_date_range']) ) {
                     $bookingpress_search_date         = $bookingpress_search_data['selected_date_range'];
                     $start_date                       = date('Y-m-d', strtotime($bookingpress_search_date[0]));
                     $end_date                         = date('Y-m-d', strtotime($bookingpress_search_date[1]));
-                    $bookingpress_search_query_where .= "AND (bookingpress_appointment_date BETWEEN '{$start_date}' AND '{$end_date}')";
+                    $bookingpress_search_query_where .= $wpdb->prepare( " AND (bookingpress_appointment_date BETWEEN %s AND %s)", $start_date, $end_date );
                 }
                 if (! empty($bookingpress_search_data['customer_name']) ) {
                     $bookingpress_search_name         = $bookingpress_search_data['customer_name'];
-                    $bookingpress_search_customer_id  = implode(',', $bookingpress_search_name);
-                    $bookingpress_search_query_where .= "AND (bookingpress_customer_id IN ({$bookingpress_search_customer_id}))";
+
+                    $search_name_query = ' AND ( bookingpress_customer_id IN(';
+                    $search_name_query .= rtrim( str_repeat( '%d,', count( $bookingpress_search_name) ), ',' ).' )';
+                    array_unshift( $bookingpress_search_name, $search_name_query );
+                    $search_name_query_str = call_user_func_array( array( $wpdb, 'prepare' ), $bookingpress_search_name );
+                    
+                    $bookingpress_search_query_where .= $search_name_query_str;
                 }
                 if (! empty($bookingpress_search_data['service_name']) ) {
                     $bookingpress_search_name         = $bookingpress_search_data['service_name'];
-                    $bookingpress_search_service_id   = implode(',', $bookingpress_search_name);
-                    $bookingpress_search_query_where .= "AND (bookingpress_service_id IN ({$bookingpress_search_service_id}))";
+
+                    $search_name_query = ' AND ( bookingpress_service_id IN(';
+                    $search_name_query .= rtrim( str_repeat( '%d,', count( $bookingpress_search_name) ), ',' ).' )';
+                    array_unshift( $bookingpress_search_name, $search_name_query );
+                    $search_name_query_str = call_user_func_array( array( $wpdb, 'prepare' ), $bookingpress_search_name );
+                    
+                    $bookingpress_search_query_where .= $search_name_query_str;
                 }
                 if (! empty($bookingpress_search_data['appointment_status'] && $bookingpress_search_data['appointment_status'] != 'all') ) {
                     $bookingpress_search_name         = $bookingpress_search_data['appointment_status'];
-                    $bookingpress_search_query_where .= "AND (bookingpress_appointment_status = '{$bookingpress_search_name}')";
+                    $bookingpress_search_query_where .= $wpdb->prepare( " AND (bookingpress_appointment_status = %s)", $bookingpress_search_name );
                 }
                 if(!empty( $bookingpress_search_data['search_appointment_id'])) {
                     $bookingpress_search_id = $bookingpress_search_data['search_appointment_id'];
-                    $bookingpress_search_query_where .= "AND (bookingpress_booking_id = '{$bookingpress_search_id}')";
+                    $bookingpress_search_query_where .= $wpdb->prepare( " AND (bookingpress_booking_id = %d)", $bookingpress_search_id );
                     
                 }
                 $bookingpress_search_query_where = apply_filters('bookingpress_appointment_view_add_filter', $bookingpress_search_query_where, $bookingpress_search_data);

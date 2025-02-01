@@ -5,7 +5,7 @@ Donate link: https://bookingpressplugin.com/
 Requires at least: 5.3.0
 Tested up to: 6.7.1
 Requires PHP: 5.6
-Stable tag: 1.1.26
+Stable tag: 1.1.27
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -220,15 +220,17 @@ Please follow the steps for installation:
 
 == Changelog ==
 
+= 1.1.27 =
+* Updated currency symbol for CFP France.
+* Fixed: Calendar popover data not loaded in some cases.
+* Other minor bug fixes
+
 = 1.1.26 =
 * Minor bug fixes
 
 = 1.1.25 =
 * Fixed: add new service/appointment model hide behind the admin menu bar on websites hosted on wordpress.com
 * Other minor bug fixes
-
-= 1.1.24 =
-* Minor bug fixes
 
 For a complete list of changelogs of earlier versions, please check the website [here](https://www.bookingpressplugin.com/documents/changelog/#free-version)
 
