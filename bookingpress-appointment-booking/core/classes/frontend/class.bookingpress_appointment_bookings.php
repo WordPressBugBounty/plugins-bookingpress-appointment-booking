@@ -5056,9 +5056,9 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             do_action('bookingpress_front_booking_form_load_before');
             
             $defaults = array(
-            'service'  => 0,
-            'category' => 0,
-            'selected_service' => 0,
+                'service'  => 0,
+                'category' => 0,
+                'selected_service' => 0,
             );
             $args     = shortcode_atts($defaults, $atts, $tag);
 
@@ -5071,9 +5071,7 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
                 $atts['selected_service'] = !empty( $atts['selected_service'] ) ? intval( $atts['selected_service'] ) : '';
             }
             
-            
             extract($args);
-
             
             $category = explode( ',', $category );
             $category = array_map( 'intval', $category );
@@ -5694,10 +5692,6 @@ if (! class_exists('bookingpress_appointment_bookings')  && class_exists('Bookin
             
             $bookingpress_dynamic_data_fields = '';
             $bookingpress_dynamic_data_fields = apply_filters('bookingpress_front_booking_dynamic_data_fields', $bookingpress_dynamic_data_fields, $this->bookingpress_form_category, $this->bookingpress_form_service,$selected_service,$selected_category);
-
-
-
-
 
             $bookingpress_dynamic_on_load_methods_data = '';
             $bookingpress_dynamic_on_load_methods_data = apply_filters('bookingpress_front_booking_dynamic_on_load_methods', $bookingpress_dynamic_on_load_methods_data);
